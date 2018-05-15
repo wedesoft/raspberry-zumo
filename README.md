@@ -22,3 +22,4 @@
     * [#5: Line Follower](https://www.youtube.com/watch?v=Z5_8Va8QxnY)
 * [Enable SSH on Raspberry Pi](https://www.raspberrypi.org/documentation/remote-access/ssh/)
 * [SSH config file](https://nerderati.com/2011/03/17/simplify-your-life-with-an-ssh-config-file/)
+* [Ruby conversion of RPi.GPIO Python module](https://github.com/ClockVapor/rpi_gpio)
