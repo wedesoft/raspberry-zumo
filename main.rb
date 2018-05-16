@@ -10,6 +10,15 @@ class Main
 
   def update
     @joystick.update
-    @client.write "#{@joystick.axis[0] or 0},#{@joystick.axis[1] or 0}"
+    @client.write "#{@joystick.axis[1] or 0},#{@joystick.axis[4] or 0}"
+  end
+end
+
+
+if __FILE__ == $0
+  main = Main.new
+  while true
+    main.update
+    sleep 0.01
   end
 end

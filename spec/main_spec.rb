@@ -37,7 +37,7 @@ describe Main do
     end
 
     it 'should get the axes values from the joystick' do
-      allow(joystick).to receive(:axis).and_return({0 => 42, 1 => -180})
+      allow(joystick).to receive(:axis).and_return({1 => 42, 4 => -180})
       expect(udp_client).to receive(:write).with '42,-180'
       Main.new.update
     end
