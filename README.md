@@ -3,7 +3,7 @@
 ## Parts
 
 * [Zumo chassis kit](https://www.amazon.co.uk/gp/product/B01M00W194) ([user guide](https://www.pololu.com/docs/pdf/0J54/zumo_chassis.pdf))
-* 2 [50:1 Micro Metal Gearmotor HPCB 6V with Extended Motor Shaft](https://www.amazon.co.uk/gp/product/B071D9872N)
+* 2 [298:1 Micro Metal Gearmotor (Extended back shaft)](https://shop.pimoroni.com/products/micro-metal-gearmotor-extended-back-shaft)
 * [Raspberry Pi\_16GB\_DS Pi 16 GB Official NOOBS Micro SD Card](https://www.amazon.co.uk/Raspberry-Pi_16GB_DS-Pi-Official-NOOBS/dp/B01D4TW25Y)
 * [Raspberry Pi Zero W (Wireless) & Zero Essentials Kit](https://www.amazon.co.uk/gp/product/B06XCYGP27)
 * [Poweradd Slim2 5000mAh Portable Charger Power Bank](https://www.amazon.co.uk/Poweradd-Portable-Technology-Lightning-Included-Black/dp/B00MWU1GGI)
