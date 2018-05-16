@@ -58,5 +58,11 @@ describe Service do
       expect(gpio).to receive(:update).with 0, 0, 0, 0
       Service.new.update
     end
+
+    it 'should not exceed 100.0' do
+      allow(udp_server).to receive(:read).and_return "32768,-32768"
+      expect(gpio).to receive(:update).with 100, 0, 0, 100
+      Service.new.update
+    end
   end
 end

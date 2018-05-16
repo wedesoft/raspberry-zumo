@@ -11,7 +11,7 @@ class Service
 
   def adapt value
     if value >= DEADZONE
-      (value - DEADZONE) * 100.0 / (32767 - DEADZONE)
+      [(value - DEADZONE) * 100.0 / (32767 - DEADZONE), 100.0].min
     else
       0.0
     end
