@@ -2,7 +2,7 @@ require 'socket'
 
 
 class Server
-  def initialize host = 'raspberrypi', port = 2200
+  def initialize host = 'raspberrypi.local', port = 2200
     @socket = UDPSocket.new
     @socket.bind host, port
   end
