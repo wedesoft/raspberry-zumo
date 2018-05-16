@@ -13,6 +13,8 @@ class Server
   end
 end
 
+
+server = Server.new
 while true
-  puts Server.new.read
+  puts server.read
 end
