@@ -14,4 +14,4 @@ class Server
 end
 
 
-Server.new.read
+puts Server.new.read
