@@ -1,7 +1,7 @@
 require 'socket'
 
 
-class Client
+class UDPClient
   def initialize host = 'raspberrypi.local', port = 2200
     @socket = UDPSocket.new
     @socket.connect host, port
@@ -14,7 +14,7 @@ end
 
 
 if __FILE__ == $0
-  client = Client.new
+  client = UDPClient.new
   while true
     str = STDIN.readline.chomp
     break if str.empty?

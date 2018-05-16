@@ -1,7 +1,7 @@
 require 'socket'
 
 
-class Server
+class UDPServer
   def initialize host = 'raspberrypi.local', port = 2200
     @socket = UDPSocket.new
     @socket.bind host, port
@@ -15,7 +15,7 @@ end
 
 
 if __FILE__ == $0
-  server = Server.new
+  server = UDPServer.new
   while true
     puts server.read
   end
