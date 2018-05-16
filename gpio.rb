@@ -1,10 +1,14 @@
 begin
   require 'rpi_gpio'
-rescue LoadError
+rescue RuntimeError
 end
 
 
 class GPIO
+  #  7 and 13: forward
+  # 11 and 15: backward
+  #  7 and 15: left
+  # 11 and 13: right
   PINS = [7, 11, 13, 15]
   FREQ = 400
 
@@ -30,11 +34,3 @@ class GPIO
     RPi::GPIO.reset
   end
 end
-
-
-
-
-#pins = [7, 13]  # forward
-#pins = [11, 15] # backward
-#pins = [7, 15]  # left
-#pins = [11, 13] # right
