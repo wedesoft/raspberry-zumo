@@ -13,5 +13,6 @@ class Server
   end
 end
 
-
-puts Server.new.read
+while true
+  puts Server.new.read
+end

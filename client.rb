@@ -13,4 +13,8 @@ class Client
 end
 
 
-Client.new.write 'hello'
+while true
+  str = STDIN.readline.chomp
+  break if str.empty?
+  Client.new.write str
+end
