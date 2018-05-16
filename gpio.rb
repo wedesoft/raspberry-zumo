@@ -30,7 +30,7 @@ class GPIO
   end
 
   def stop
-    pwms.collect { |pwm| pwm.stop }
+    @pwms.collect { |pwm| pwm.stop }
     RPi::GPIO.reset
   end
 end
