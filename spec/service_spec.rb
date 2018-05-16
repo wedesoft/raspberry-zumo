@@ -65,4 +65,11 @@ describe Service do
       Service.new.update
     end
   end
+
+  describe :stop do
+    it 'should stop the general purpose input/output' do
+      expect(gpio).to receive(:stop)
+      Service.new.stop
+    end
+  end
 end

@@ -21,11 +21,19 @@ class Service
     axes = @socket.read.split(',').collect &:to_i
     @gpio.update adapt(-axes[1]), adapt(axes[1]), adapt(-axes[0]), adapt(axes[0])
   end
+
+  def stop
+    @gpio.stop
+  end
 end
 
 
 if __FILE__ == $0
   service = Service.new
+  Signal.trap "INT" do
+    service.stop
+    exit
+  end
   while true
     service.update
   end
