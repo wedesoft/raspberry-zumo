@@ -13,9 +13,11 @@ class Client
 end
 
 
-client = Client.new
-while true
-  str = STDIN.readline.chomp
-  break if str.empty?
-  client.write str
+if __FILE__ == $0
+  client = Client.new
+  while true
+    str = STDIN.readline.chomp
+    break if str.empty?
+    client.write str
+  end
 end

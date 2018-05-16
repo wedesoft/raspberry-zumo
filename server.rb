@@ -14,7 +14,9 @@ class Server
 end
 
 
-server = Server.new
-while true
-  puts server.read
+if __FILE__ == $0
+  server = Server.new
+  while true
+    puts server.read
+  end
 end
