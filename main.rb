@@ -10,6 +10,6 @@ class Main
 
   def update
     @joystick.update
-    @client.write '0,0'
+    @client.write "#{@joystick.axis[0] or 0},#{@joystick.axis[1] or 0}"
   end
 end

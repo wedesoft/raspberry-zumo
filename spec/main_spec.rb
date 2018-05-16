@@ -9,6 +9,7 @@ describe Main do
     allow(UDPClient).to receive(:new).and_return udp_client
     allow(Joystick).to receive(:new).and_return joystick
     allow(joystick).to receive :update
+    allow(joystick).to receive(:axis).and_return({})
     allow(udp_client).to receive :write
   end
 
@@ -32,6 +33,12 @@ describe Main do
 
     it 'should send the axes values' do
       expect(udp_client).to receive(:write).with '0,0'
+      Main.new.update
+    end
+
+    it 'should get the axes values from the joystick' do
+      allow(joystick).to receive(:axis).and_return({0 => 42, 1 => -180})
+      expect(udp_client).to receive(:write).with '42,-180'
       Main.new.update
     end
   end
