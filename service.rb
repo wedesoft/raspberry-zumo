@@ -25,7 +25,7 @@ end
 
 
 if __FILE__ == $0
-  Service = Service.new
+  service = Service.new
   while true
     service.update
   end
