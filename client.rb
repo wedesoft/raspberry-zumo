@@ -8,7 +8,7 @@ class Client
   end
 
   def write str
-    @socket.puts str
+    @socket.print str
   end
 end
 
