@@ -5,6 +5,6 @@ require_relative 'joystick'
 class Main
   def initialize
     UDPClient.new
-    JoyStick.new
+    Joystick.new
   end
 end
