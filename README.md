@@ -26,3 +26,4 @@
 * [Ruby conversion of RPi.GPIO Python module](https://github.com/ClockVapor/rpi_gpio)
 * [Sockets in Ruby](https://github.com/practicingruby/guides/wiki/Socket)
 * [Arduino button tutorial](https://www.arduino.cc/en/Tutorial/Button)
+* [Raspberry Pi camera configuration](https://www.raspberrypi.org/documentation/configuration/camera.md)
