@@ -37,13 +37,13 @@ describe Service do
 
     it 'should drive forward' do
       allow(udp_server).to receive(:read).and_return "-32767,-32767"
-      expect(gpio).to receive(:update).with 100, 0, 100, 0
+      expect(gpio).to receive(:update).with 0, 100, 0, 100
       Service.new.update
     end
 
     it 'should drive backward' do
       allow(udp_server).to receive(:read).and_return "32767,32767"
-      expect(gpio).to receive(:update).with 0, 100, 0, 100
+      expect(gpio).to receive(:update).with 100, 0, 100, 0
       Service.new.update
     end
 
