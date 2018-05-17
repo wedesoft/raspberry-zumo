@@ -19,7 +19,7 @@ class Service
 
   def update
     axes = @socket.read.split(',').collect &:to_i
-    @gpio.update adapt(axes[1]), adapt(-axes[1]), adapt(axes[0]), adapt(-axes[0])
+    @gpio.update adapt(axes[0]), adapt(-axes[0]), adapt(axes[1]), adapt(-axes[1])
   end
 
   def stop
