@@ -12,6 +12,11 @@
 * [Elegoo 6PCS 170 tie-points Mini Breadboard kit](https://www.amazon.co.uk/Elegoo-tie-points-Breadboard-Breadboards-Electronic/dp/B01N0YWIR7)
 * [Elegoo breadboard jumper wires](https://www.amazon.co.uk/gp/product/B01EV70C78)
 
+```
+sudo rpi-update # to make sure the v4L2 drive is available.
+sudo modprobe bcm2835-v4l2 # to load it and create /dev/video0
+```
+
 ## External Links
 
 * [Raspberry Pi Zumo Robot](http://www.explainingcomputers.com/rasp_pi_robotics.html)
@@ -27,3 +32,5 @@
 * [Sockets in Ruby](https://github.com/practicingruby/guides/wiki/Socket)
 * [Arduino button tutorial](https://www.arduino.cc/en/Tutorial/Button)
 * [Raspberry Pi camera configuration](https://www.raspberrypi.org/documentation/configuration/camera.md)
+* [sudo rpi-update and sudo modprobe bcm2835-v4l2](https://www.raspberrypi.org/forums/viewtopic.php?t=68247)
+* [FFmpeg streaming on Raspberry Pi](https://www.hackster.io/whitebank/rasbperry-pi-ffmpeg-install-and-stream-to-web-389c34)
