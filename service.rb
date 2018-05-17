@@ -3,7 +3,7 @@ require_relative 'udp_server'
 
 
 class Service
-  DEADZONE = 2400
+  DEADZONE = 4000
   def initialize
     @gpio = GPIO.new
     @socket = UDPServer.new
