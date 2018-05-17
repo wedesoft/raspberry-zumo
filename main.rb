@@ -1,3 +1,4 @@
+#!/usr/bin/env ruby
 require_relative 'udp_client'
 require_relative 'joystick'
 
