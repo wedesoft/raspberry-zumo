@@ -20,6 +20,7 @@
     * [#3: Keyboard Control](https://www.youtube.com/watch?v=XvOONPSoglY)
     * [#4: SSH Network Control](https://www.youtube.com/watch?v=44yNbFictEg)
     * [#5: Line Follower](https://www.youtube.com/watch?v=Z5_8Va8QxnY)
+* [Arduino DC motor tutorial](https://howtomechatronics.com/tutorials/arduino/arduino-dc-motor-control-tutorial-l298n-pwm-h-bridge/)
 * [Enable SSH on Raspberry Pi](https://www.raspberrypi.org/documentation/remote-access/ssh/)
 * [SSH config file](https://nerderati.com/2011/03/17/simplify-your-life-with-an-ssh-config-file/)
 * [Ruby conversion of RPi.GPIO Python module](https://github.com/ClockVapor/rpi_gpio)
