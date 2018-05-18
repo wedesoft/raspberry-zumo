@@ -23,14 +23,35 @@ sudo apt-get install ffmpeg
 sudo rpi-update # to make sure the v4L2 drive is available.
 sudo modprobe bcm2835-v4l2 # to load it and create /dev/video0
 sudo cp etc/ffserver.conf /etc
-./server.rb &
-./etc/webcam.sh
-
 ```
 
-On the PC:
+## Run
+### On the Raspberry Pi
+
+Run the control software.
+```
+./server.rb
+```
+
+Run the FFmpeg server.
+```
+ffserver -d
+```
+
+Start the camera stream.
+```
+./etc/webcam.sh
+```
+
+### On the PC
+Run the XBox client.
 ```
 ./client.rb
+```
+
+Run the camera display.
+```
+./etc/play.sh
 ```
 
 ## External Links
