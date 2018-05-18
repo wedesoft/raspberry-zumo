@@ -3,7 +3,7 @@ require_relative 'gpio'
 require_relative 'udp_server'
 
 
-class Service
+class Server
   DEADZONE = 4000
   def initialize
     @gpio = GPIO.new
@@ -30,7 +30,7 @@ end
 
 
 if __FILE__ == $0
-  service = Service.new
+  service = Server.new
   Signal.trap "INT" do
     service.stop
     exit

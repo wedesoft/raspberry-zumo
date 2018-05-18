@@ -12,9 +12,17 @@
 * [Elegoo 6PCS 170 tie-points Mini Breadboard kit](https://www.amazon.co.uk/Elegoo-tie-points-Breadboard-Breadboards-Electronic/dp/B01N0YWIR7)
 * [Elegoo breadboard jumper wires](https://www.amazon.co.uk/gp/product/B01EV70C78)
 
+## Installation
+
+On the Raspberry Pi:
 ```
 sudo rpi-update # to make sure the v4L2 drive is available.
 sudo modprobe bcm2835-v4l2 # to load it and create /dev/video0
+./server.rb
+```
+
+On the PC:
+```
 ```
 
 ## External Links
