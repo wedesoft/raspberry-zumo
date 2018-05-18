@@ -1,1 +1,2 @@
-ffplay -fflags nobuffer -flags low_delay udp://wedemob:8000
+#!/bin/sh
+ffplay rtsp://raspberrypi:5554/test.mpeg4
