@@ -14,7 +14,10 @@
 
 ## Installation
 
-On the Raspberry Pi:
+1. Setup LAN Wifi connection on the Raspberry Pi Zero W.
+1. Use *rpi-config* to enable SSH remote login on the Raspberry Pi Zero W.
+
+On the Raspberry Pi Zero W:
 ```
 sudo rpi-update # to make sure the v4L2 drive is available.
 sudo modprobe bcm2835-v4l2 # to load it and create /dev/video0
@@ -23,6 +26,7 @@ sudo modprobe bcm2835-v4l2 # to load it and create /dev/video0
 
 On the PC:
 ```
+./client.rb
 ```
 
 ## External Links

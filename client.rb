@@ -3,7 +3,7 @@ require_relative 'udp_client'
 require_relative 'joystick'
 
 
-class Main
+class Client
   def initialize
     @client = UDPClient.new
     @joystick = Joystick.new
@@ -17,7 +17,7 @@ end
 
 
 if __FILE__ == $0
-  main = Main.new
+  main = Client.new
   while true
     main.update
     sleep 0.01
