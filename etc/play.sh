@@ -1,2 +1,1 @@
-#!/bin/sh
-ffplay -fs http://raspberrypi.local:8090/test.ffm
+ffplay -fflags nobuffer -flags low_delay udp://wedemob:8000

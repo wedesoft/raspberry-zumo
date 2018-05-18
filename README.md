@@ -19,9 +19,13 @@
 
 On the Raspberry Pi Zero W:
 ```
+sudo apt-get install ffmpeg
 sudo rpi-update # to make sure the v4L2 drive is available.
 sudo modprobe bcm2835-v4l2 # to load it and create /dev/video0
-./server.rb
+sudo cp etc/ffserver.conf /etc
+./server.rb &
+./etc/webcam.sh
+
 ```
 
 On the PC:
