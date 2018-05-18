@@ -10,7 +10,7 @@ class GPIO
   #  7 and 15: left
   # 11 and 13: right
   PINS = [7, 11, 13, 15]
-  FREQ = 400
+  FREQ = 800
 
   def initialize
     RPi::GPIO.set_numbering :board
