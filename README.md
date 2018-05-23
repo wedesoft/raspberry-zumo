@@ -57,6 +57,7 @@ Run the XBox client.
 
 Run the camera display.
 ```
+sudo modprobe bcm2835-v4l2
 ./etc/play.sh
 ```
 
