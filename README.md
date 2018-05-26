@@ -1,5 +1,7 @@
 # raspberry-zumo
 
+![Raspberry Pi Zumo](raspberrypi-zumo.jpg)
+
 ## Parts
 
 * [Zumo chassis kit](https://www.amazon.co.uk/gp/product/B01M00W194) ([user guide](https://www.pololu.com/docs/pdf/0J54/zumo_chassis.pdf))
