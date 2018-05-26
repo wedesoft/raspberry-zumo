@@ -1,4 +1,4 @@
-# raspberry-zumo
+# raspberry-zumo [![Build Status](https://travis-ci.org/wedesoft/raspberry-zumo.svg?branch=master)](https://travis-ci.org/wedesoft/raspberry-zumo)
 
 ![Raspberry Pi Zumo](raspberrypi-zumo.jpg)
 
