@@ -14,6 +14,7 @@ class GPIO:
         for pwm in self.pwms:
             pwm.start(0)
         signal.signal(signal.SIGTERM, self.stop)
+        signal.signal(signal.SIGINT, self.stop)
 
     def update(self, *values):
         for pwm, value in zip(self.pwms, values):
