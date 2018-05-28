@@ -23,4 +23,4 @@ class GPIO:
     def stop(self):
         for pwm in self.pwms:
             pwm.stop()
-        GPIO.cleanup()
+        RPi.GPIO.cleanup()
