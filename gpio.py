@@ -13,6 +13,6 @@ class GPIO:
         for pwm in self.pwms:
             pwm.start(0)
 
-    def update(*values):
-        for pwm, value in self.pwms.zip(values):
+    def update(self, *values):
+        for pwm, value in zip(self.pwms, values):
             pwm.ChangeDutyCycle(value)
