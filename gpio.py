@@ -1,3 +1,4 @@
+import signal
 import RPi.GPIO
 
 
@@ -12,7 +13,13 @@ class GPIO:
         self.pwms = [RPi.GPIO.PWM(pin, self.FREQ) for pin in self.PINS]
         for pwm in self.pwms:
             pwm.start(0)
+        signal.signal(signal.SIGTERM, self.stop)
 
     def update(self, *values):
         for pwm, value in zip(self.pwms, values):
             pwm.ChangeDutyCycle(value)
+
+    def stop(self):
+        for pwm in self.pwms:
+            pwm.stop()
+        GPIO.cleanup()
