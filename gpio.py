@@ -6,7 +6,7 @@ class GPIO:
     FREQ = 800
 
     def __init__(self):
-        RPi.GPIO.setmode(GPIO.BOARD)
+        RPi.GPIO.setmode(RPi.GPIO.BOARD)
         for pin in self.PINS:
             RPi.GPIO.setup(pin, RPi.GPIO.OUT)
         self.pwms = [RPi.GPIO.PWM(pin, self.FREQ) for pin in self.PINS]
