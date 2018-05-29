@@ -11,7 +11,12 @@ class Client:
 
     @classmethod
     def adapt(cls, value):
-        return max((value - cls.deadzone) * 100.0 / (32768 - cls.deadzone), 0.0)
+        if value > cls.deadzone:
+            return (value - cls.deadzone) * 100.0 / (32768 - cls.deadzone)
+        elif value < -cls.deadzone:
+            return (value + cls.deadzone) * 100.0 / (32768 - cls.deadzone)
+        else:
+            return 0.0
 
     def update(self):
         self.joystick.update()

@@ -41,7 +41,16 @@ class TestClientAdapt:
         assert Client.adapt(Client.deadzone) == 0.0
 
     def test_scale_from_deadzone(self):
-        assert Client.adapt(Client.deadzone + 1) < 10.0
+        assert Client.adapt(Client.deadzone + 1) < 1.0
+
+    def test_negative_scale(self):
+        assert Client.adapt(-32768) == -100.0
+
+    def test_negative_deadzone(self):
+        assert Client.adapt(-Client.deadzone) == 0.0
+
+    def test_scale_from_negative_deadzone(self):
+        assert Client.adapt(-Client.deadzone - 1) > -1.0
 
 
 class TestClientUpdate:
