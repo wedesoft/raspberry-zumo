@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 from gpio import GPIO
 from udp_server import UDPServer
 

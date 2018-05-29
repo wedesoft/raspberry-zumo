@@ -38,7 +38,7 @@ sudo cp etc/ffserver.conf /etc
 
 Run the control software.
 ```
-./server.rb
+./server.py
 ```
 
 Run the FFmpeg server.
@@ -49,18 +49,18 @@ ffserver -d
 Start the camera stream.
 ```
 sudo modprobe bcm2835-v4l2
-./etc/webcam.sh
+./webcam.sh
 ```
 
 ### On the PC
 Run the XBox client.
 ```
-./client.rb
+./client.py
 ```
 
 Run the camera display.
 ```
-./etc/play.sh
+./play.sh
 ```
 
 ## External Links

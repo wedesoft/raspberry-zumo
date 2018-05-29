@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 from udp_client import UDPClient
 from joystick import Joystick
 
