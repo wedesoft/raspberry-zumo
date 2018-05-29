@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import time
 from udp_client import UDPClient
 from joystick import Joystick
 
@@ -30,3 +31,4 @@ if __name__ == "__main__":
     client = Client()
     while True:
         client.update()
+        time.sleep(0.01)
