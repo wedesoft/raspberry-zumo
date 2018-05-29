@@ -23,7 +23,7 @@ class GPIO:
         for pwm, value in zip(self.pwms, values):
             pwm.ChangeDutyCycle(value)
 
-    def stop(self):
+    def stop(self, *args):
         for pwm in self.pwms:
             pwm.stop()
         RPi.GPIO.cleanup()
