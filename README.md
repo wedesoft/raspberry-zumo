@@ -79,5 +79,6 @@ Run the camera display.
 * [sudo rpi-update and sudo modprobe bcm2835-v4l2](https://www.raspberrypi.org/forums/viewtopic.php?t=68247)
 * [FFmpeg streaming on Raspberry Pi](https://www.hackster.io/whitebank/rasbperry-pi-ffmpeg-install-and-stream-to-web-389c34)
 * [Tensorflow for Raspberry Pi Zero](https://github.com/salekd/rpizero_smart_camera3/wiki/TensorFlow-Object-Detection-API-on-Raspberry-Pi-Zero) ([nightly builds](http://ci.tensorflow.org/view/Nightly/job/nightly-pi-zero/))
+* [RPi.GPIO](https://pypi.org/project/RPi.GPIO/)
 * [Raspberry Pi PWM GPIO in Python](https://sourceforge.net/p/raspberry-gpio-python/wiki/PWM/)
 * [UDP communication in Python](https://wiki.python.org/moin/UdpCommunication)

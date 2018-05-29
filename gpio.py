@@ -1,5 +1,8 @@
 import signal
-import RPi.GPIO
+try:
+    import RPi.GPIO
+except RuntimeError:
+    pass
 
 
 class GPIO:

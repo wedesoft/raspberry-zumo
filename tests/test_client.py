@@ -13,8 +13,7 @@ def udp_client(monkeypatch):
 @pytest.fixture(autouse=True)
 def joystick(monkeypatch):
     monkeypatch.setattr(client, 'Joystick', MagicMock(name='joystick'))
-    result = client.Joystick
-    return result
+    return client.Joystick
 
 
 @pytest.fixture

@@ -23,3 +23,9 @@ class Client:
         left_drive  = self.adapt(self.joystick.axis.get(1, 0))
         right_drive = self.adapt(self.joystick.axis.get(4, 0))
         self.udp_client.write("%.2f,%.2f" % (left_drive, right_drive))
+
+
+if __name__ == "__main__":
+    client = Client()
+    while True:
+        client.update()
