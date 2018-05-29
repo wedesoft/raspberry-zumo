@@ -12,4 +12,4 @@ before_install:
   - sudo pip install PySDL2
   - sudo pip install RPi.GPIO
 script:
-  - pytest
+  - py.test
