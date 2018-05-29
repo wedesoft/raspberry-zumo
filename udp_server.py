@@ -7,7 +7,7 @@ class UDPServer:
         self.socket.bind((host, port))
 
     def read(self):
-        reply, addr = self.socket.recvfrom(20)
+        reply, addr = self.socket.recvfrom(64)
         return reply
 
 
