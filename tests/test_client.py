@@ -30,6 +30,20 @@ class TestClient:
         assert joystick.called
 
 
+class TestClientAdapt:
+    def test_zero(self):
+        assert Client.adapt(0) == 0.0
+
+    def test_scale(self):
+        assert Client.adapt(32768) == 100.0
+
+    def test_deadzone(self):
+        assert Client.adapt(Client.deadzone) == 0.0
+
+    def test_scale_from_deadzone(self):
+        assert Client.adapt(Client.deadzone + 1) < 10.0
+
+
 class TestClientUpdate:
     @pytest.fixture(autouse=True)
     def adapt(self, target, monkeypatch):
