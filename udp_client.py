@@ -13,7 +13,7 @@ class UDPClient:
 
 
 if __name__ == "__main__":
-    client = UDPClient('', 2200)
+    client = UDPClient()
     while True:
         text = sys.stdin.readline().rstrip()
         if not text:
