@@ -7,10 +7,9 @@ language: c
 compiler:
   - gcc
 before_install:
-  - sudo apt-get install --allow-unauthenticated ruby ruby-dev
+  - sudo apt-get install --allow-unauthenticated python python-dev python-pytest python-pip
   - sudo apt-get install --allow-unauthenticated libsdl2-dev libsdl2-gfx-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-net-dev libsdl2-ttf-dev
-  - sudo gem install rspec
-  - sudo gem install rpi_gpio
-  - sudo gem install ruby-sdl2
+    sudo pip install PySDL2
+    sudo pip install RPi.GPIO
 script:
-  - rspec
+  - pytest
