@@ -17,6 +17,6 @@ class Robot:
 
 
 if __name__ == "__main__":
-    server = Robot()
+    robot = Robot()
     while True:
-        server.update()
+        robot.update()

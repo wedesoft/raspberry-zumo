@@ -28,7 +28,7 @@ class RemoteControl:
 
 
 if __name__ == "__main__":
-    client = RemoteControl()
+    remote_control = RemoteControl()
     while True:
-        client.update()
+        remote_control.update()
         time.sleep(0.01)
