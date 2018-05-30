@@ -1,27 +1,27 @@
 import pytest
 from mock import MagicMock, call
-import client
-from client import *
+import remote_control
+from remote_control import *
 
 
 @pytest.fixture(autouse=True)
 def udp_client(monkeypatch):
-    monkeypatch.setattr(client, 'UDPClient', MagicMock(name='udp_client'))
-    return client.UDPClient
+    monkeypatch.setattr(remote_control, 'UDPClient', MagicMock(name='udp_client'))
+    return remote_control.UDPClient
 
 
 @pytest.fixture(autouse=True)
 def joystick(monkeypatch):
-    monkeypatch.setattr(client, 'Joystick', MagicMock(name='joystick'))
-    return client.Joystick
+    monkeypatch.setattr(remote_control, 'Joystick', MagicMock(name='joystick'))
+    return remote_control.Joystick
 
 
 @pytest.fixture
 def target(udp_client, joystick):
-    return Client()
+    return RemoteControl()
 
 
-class TestClient:
+class TestRemoteControl:
     def test_connect_to_robot(self, target, udp_client):
         assert udp_client.called
 
@@ -29,30 +29,30 @@ class TestClient:
         assert joystick.called
 
 
-class TestClientAdapt:
+class TestRemoteControlAdapt:
     def test_zero(self):
-        assert Client.adapt(0) == 0.0
+        assert RemoteControl.adapt(0) == 0.0
 
     def test_scale(self):
-        assert Client.adapt(32768) == 100.0
+        assert RemoteControl.adapt(32768) == 100.0
 
     def test_deadzone(self):
-        assert Client.adapt(Client.deadzone) == 0.0
+        assert RemoteControl.adapt(RemoteControl.deadzone) == 0.0
 
     def test_scale_from_deadzone(self):
-        assert Client.adapt(Client.deadzone + 1) < 1.0
+        assert RemoteControl.adapt(RemoteControl.deadzone + 1) < 1.0
 
     def test_negative_scale(self):
-        assert Client.adapt(-32768) == -100.0
+        assert RemoteControl.adapt(-32768) == -100.0
 
     def test_negative_deadzone(self):
-        assert Client.adapt(-Client.deadzone) == 0.0
+        assert RemoteControl.adapt(-RemoteControl.deadzone) == 0.0
 
     def test_scale_from_negative_deadzone(self):
-        assert Client.adapt(-Client.deadzone - 1) > -1.0
+        assert RemoteControl.adapt(-RemoteControl.deadzone - 1) > -1.0
 
 
-class TestClientUpdate:
+class TestRemoteControlUpdate:
     @pytest.fixture(autouse=True)
     def adapt(self, target, monkeypatch):
         monkeypatch.setattr(target, 'adapt', MagicMock(name='adapt'))

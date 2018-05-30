@@ -4,7 +4,7 @@ from udp_client import UDPClient
 from joystick import Joystick
 
 
-class Client:
+class RemoteControl:
     deadzone = 4000
 
     def __init__(self):
@@ -28,7 +28,7 @@ class Client:
 
 
 if __name__ == "__main__":
-    client = Client()
+    client = RemoteControl()
     while True:
         client.update()
         time.sleep(0.01)
