@@ -1,3 +1,4 @@
+import sys
 import signal
 try:
     import RPi.GPIO
@@ -27,3 +28,4 @@ class GPIO:
         for pwm in self.pwms:
             pwm.stop()
         RPi.GPIO.cleanup()
+        sys.exit(0)
