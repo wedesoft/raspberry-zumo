@@ -43,3 +43,15 @@ class TestRobotUpdate:
         robot.UDPServer.return_value.read.return_value = "-25.0,-65.0"
         target.update()
         gpio.return_value.update.assert_called_with(0.0, 25.0, 0.0, 65.0)
+
+    def test_return_true(self, target):
+        assert target.update()
+
+    def test_ignore_none(self, target, gpio):
+        robot.UDPServer.return_value.read.return_value = None
+        target.update()
+        assert not gpio.return_value.update.called
+
+    def test_dont_return_true_if_no_message_received(self, target):
+        robot.UDPServer.return_value.read.return_value = None
+        assert not target.update()
