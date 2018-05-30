@@ -3,7 +3,7 @@ from gpio import GPIO
 from udp_server import UDPServer
 
 
-class Server:
+class Robot:
     def __init__(self):
         self.udp_server = UDPServer()
         self.gpio = GPIO()
@@ -15,6 +15,6 @@ class Server:
 
 
 if __name__ == "__main__":
-    server = Server()
+    server = Robot()
     while True:
         server.update()

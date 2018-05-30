@@ -38,7 +38,7 @@ sudo cp etc/ffserver.conf /etc
 
 Run the control software.
 ```
-./server.py
+./robot.py
 ```
 
 Run the FFmpeg server.
@@ -53,9 +53,10 @@ sudo modprobe bcm2835-v4l2
 ```
 
 ### On the PC
+
 Run the XBox client.
 ```
-./client.py
+./remote_control.py
 ```
 
 Run the camera display.
