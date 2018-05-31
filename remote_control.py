@@ -31,4 +31,4 @@ if __name__ == "__main__":
     remote_control = RemoteControl()
     while True:
         remote_control.update()
-        time.sleep(1)
+        time.sleep(0.1)
