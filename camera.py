@@ -8,7 +8,7 @@ except ImportError:
 # http://picamera.readthedocs.io/en/release-1.10/fov.html
 class Camera:
     def __init__(self, resolution=(320, 240)):
-        self.camera = PiCamera(resolution=resolution, sensor_mode=6, framerate=42)
+        self.camera = PiCamera(resolution=resolution, sensor_mode=6, framerate=42, iso=800)
         self.resolution = resolution
 
     def capture(self):
