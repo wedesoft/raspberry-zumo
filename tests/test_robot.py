@@ -17,8 +17,25 @@ def gpio(monkeypatch):
     return robot.GPIO
 
 
+@pytest.fixture(autouse=True)
+def camera(monkeypatch):
+    monkeypatch.setattr(robot, 'Camera', MagicMock(name='camera'))
+    return robot.Camera
+
+
+@pytest.fixture(autouse=True)
+def image(camera):
+    return camera.return_value.capture.return_value
+
+
+@pytest.fixture(autouse=True)
+def logger(monkeypatch):
+    monkeypatch.setattr(robot, 'Logger', MagicMock(name='logger'))
+    return robot.Logger
+
+
 @pytest.fixture
-def target(udp_server, gpio):
+def target(udp_server, gpio, camera):
     return Robot()
 
 
@@ -28,6 +45,12 @@ class TestRobot:
 
     def test_start_drives(self, target, gpio):
         assert gpio.called
+
+    def test_initialises_camera(self, target, camera):
+        assert camera.called
+
+    def test_initialises_logging(self, target, logger):
+        assert logger.called
 
 
 class TestRobotUpdate:
@@ -39,19 +62,38 @@ class TestRobotUpdate:
         target.update()
         gpio.return_value.update.assert_called_with(25.0, 0.0, 65.0, 0.0)
 
-    def test_update_drives_when_reversing(self, target, gpio):
-        robot.UDPServer.return_value.read.return_value = "-25.0,-65.0"
+    def test_update_drives_when_reversing(self, target, gpio, udp_server):
+        udp_server.return_value.read.return_value = "-25.0,-65.0"
         target.update()
         gpio.return_value.update.assert_called_with(0.0, 25.0, 0.0, 65.0)
 
     def test_return_true(self, target):
         assert target.update()
 
-    def test_ignore_none(self, target, gpio):
-        robot.UDPServer.return_value.read.return_value = None
+    def test_ignore_none(self, target, gpio, udp_server):
+        udp_server.return_value.read.return_value = None
         target.update()
         assert not gpio.return_value.update.called
 
-    def test_dont_return_true_if_no_message_received(self, target):
-        robot.UDPServer.return_value.read.return_value = None
+    def test_dont_return_true_if_no_message_received(self, target, udp_server):
+        udp_server.return_value.read.return_value = None
         assert not target.update()
+
+    def test_capture_image(self, target, camera):
+        target.update()
+        assert camera.return_value.capture.called
+
+    def test_record_image_and_control(self, target, camera, logger, image):
+        target.update()
+        logger.return_value.log.assert_called_with(image, 25.0, 65.0)
+
+    def test_record_nothing_initially(self, target, camera, logger, udp_server):
+        udp_server.return_value.read.return_value = None
+        target.update()
+        assert not logger.return_value.log.called
+
+    def test_record_previous_control_setting_if_no_message_received(self, target, camera, logger, udp_server, image):
+        target.update()
+        udp_server.return_value.read.return_value = None
+        target.update()
+        assert logger.return_value.log.call_args_list == [call(image, 25.0, 65.0), call(image, 25.0, 65.0)]
