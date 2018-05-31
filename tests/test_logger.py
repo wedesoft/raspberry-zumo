@@ -20,12 +20,12 @@ class TestLogger:
 
     def test_save_image(self, target, image, write_image):
         target.log(image, 0, 0)
-        write_image.assert_called_with('/tmp/image0000.png', image)
+        write_image.assert_called_with('/tmp/image0000.jpg', image)
 
     def test_increase_counter(self, target, image, write_image):
         target.log(image, 0, 0)
         target.log(image, 0, 0)
-        assert write_image.call_args_list == [call('/tmp/image0000.png', image), call('/tmp/image0001.png', image)]
+        assert write_image.call_args_list == [call('/tmp/image0000.jpg', image), call('/tmp/image0001.jpg', image)]
 
     def test_write_yaml(self, target, image):
         target.log(image, 25.0, 65.0)
