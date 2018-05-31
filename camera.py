@@ -8,8 +8,8 @@ except ImportError:
 class Camera:
     def __init__(self, resolution=(640, 480)):
         self.camera = PiCamera(resolution=resolution, sensor_mode=3, framerate=10)
-        self.raw_capture = PiRGBArray(self.camera, size=resolution)
 
     def capture(self):
-        self.camera.capture(self.raw_capture, format="bgr")
-        return self.raw_capture.array
+        raw_capture = PiRGBArray(self.camera.resolution, size=resolution)
+        self.camera.capture(raw_capture, format="bgr")
+        return raw_capture.array
