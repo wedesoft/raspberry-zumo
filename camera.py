@@ -6,7 +6,7 @@ except ImportError:
 
 
 class Camera:
-    def __init__(self, resolution=(640, 480)):
+    def __init__(self, resolution=(320, 240)):
         self.camera = PiCamera(resolution=resolution, sensor_mode=3, framerate=10)
         self.resolution = resolution
 
