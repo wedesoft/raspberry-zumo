@@ -2,10 +2,7 @@
 from gpio import GPIO
 from udp_server import UDPServer
 from camera import Camera
-
-
-class Logger:
-    pass
+from logger import Logger
 
 
 class Robot:
