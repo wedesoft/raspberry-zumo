@@ -12,7 +12,7 @@ class Logger:
         self.count = 0
 
     def log(self, image, left_drive, right_drive):
-        write_image(self.image_file_format % (self.count, 'png'), image)
+        write_image(self.image_file_format % (self.count, 'jpg'), image)
         with open(self.image_file_format % (self.count, 'yml'), 'w') as f:
             yaml.dump([left_drive, right_drive], f)
         self.count += 1
