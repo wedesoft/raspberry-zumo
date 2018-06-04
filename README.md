@@ -83,3 +83,4 @@ Run the camera display.
 * [RPi.GPIO](https://pypi.org/project/RPi.GPIO/)
 * [Raspberry Pi PWM GPIO in Python](https://sourceforge.net/p/raspberry-gpio-python/wiki/PWM/)
 * [UDP communication in Python](https://wiki.python.org/moin/UdpCommunication)
+* [PiCamera API](http://picamera.readthedocs.io/en/release-1.10/api_camera.html)
