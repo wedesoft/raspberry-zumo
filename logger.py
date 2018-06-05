@@ -7,7 +7,7 @@ def write_image(file_name, image):
 
 
 class Logger:
-    def __init__(self, image_file_format='image%04d.%s'):
+    def __init__(self, image_file_format='data/image%04d.%s'):
         self.image_file_format = image_file_format
         self.count = 0
 
