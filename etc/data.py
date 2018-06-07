@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 import sys
 from functools import reduce
 from operator import add
@@ -49,15 +49,18 @@ for i in range(n):
     data[i] = cv2.imread("data/image%04d.jpg" % (i * s), cv2.IMREAD_GRAYSCALE)[::p, ::p]
     left_drive, right_drive = yaml.load(open("data/image%04d.yml" % (i * s)))
     label[i, round(left_drive / 100.0 * n_div + n_div)] = 1
-data = data.reshape((n, w * h))
+#data = data.reshape((n, w * h))
 data, label = random_selection(n, data, label)
 training = data[:n_train], label[:n_train]
 validation = data[n_train:n_train+n_validation], label[n_train:n_train+n_validation]
 testing = data[n_train+n_validation:], label[n_train+n_validation:]
 scale = Scale(training[0], 1000.0)
 n_hidden = 4
-x = tf.placeholder(tf.float32, [None, h * w], name='x')
+x = tf.placeholder(tf.float32, [None, h, w], name='x')
 y = tf.placeholder(tf.float32, [None, n_out])
+avg = tf.constant(scale.average.astype(np.float32))
+dev = tf.constant(scale.deviation.astype(np.float32))
+xs = tf.reshape((x - avg) / dev, [-1, h * w])
 m1 = tf.Variable(tf.truncated_normal([h * w, n_hidden], stddev=1.0/(h * w)))
 b1 = tf.Variable(tf.truncated_normal([n_hidden]))
 m2 = tf.Variable(tf.truncated_normal([n_hidden, n_out], stddev=1.0/n_hidden))
@@ -67,7 +70,7 @@ reg_candidates = [m1, m2]
 
 # nearest neighbour?
 
-a0 = tf.sigmoid(x)
+a0 = tf.sigmoid(xs)
 z1 = tf.add(tf.matmul(a0, m1), b1)
 a1 = tf.sigmoid(z1)
 z2 = tf.add(tf.matmul(a1, m2), b2)
@@ -88,9 +91,9 @@ rmsd = tf.reduce_sum(tf.square(h - y)) / (2 * m)
 dtheta = tf.gradients(cost, theta)
 step = [tf.assign(value, tf.subtract(value, tf.multiply(alpha, dvalue))) for value, dvalue in zip(theta, dtheta)]
 
-train = {x: scale(training[0]), y: training[1]}
-validate = {x: scale(validation[0]), y: validation[1]}
-test = {x: scale(testing[0]), y: testing[1]}
+train = {x: training[0], y: training[1]}
+validate = {x: validation[0], y: validation[1]}
+test = {x: testing[0], y: testing[1]}
 
 saver = tf.train.Saver()
 session = tf.InteractiveSession()
@@ -110,3 +113,13 @@ print('error:', np.average(np.abs(session.run(prediction, feed_dict=validate) - 
 print('test:', np.average(np.abs(session.run(prediction, feed_dict=test) - session.run(tf.argmax(y, axis=-1), feed_dict = test))))
 tf.add_to_collection('prediction', prediction)
 saver.save(session, './model')
+
+
+#import cv2
+#from camera import Camera
+#session = tf.InteractiveSession()
+#saver = tf.train.import_meta_graph('model.meta')
+#saver.restore(session, 'model')
+#prediction = tf.get_collection('prediction')[0]
+#camera = Camera()
+#session.run(prediction, feed_dict={'x:0': cv2.cvtColor(camera.capture(), cv2.COLOR_BGR2GRAY)[::10, ::10].reshape(1, 24, 32)})
