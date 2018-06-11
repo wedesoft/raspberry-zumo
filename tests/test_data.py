@@ -1,7 +1,23 @@
 import pytest
+from mock import MagicMock, call
 from numpy.testing import assert_array_equal
 import data
 from data import *
+
+
+class TestCountFiles:
+    def test_no_file(self):
+        assert 0 == count_files("%d.png", 1000, lambda name: False)
+
+    def test_checks_file(self):
+        exist = MagicMock(name='exist')
+        exist.return_value = False
+        count_files("test%02d.png", 100, exist)
+        assert exist.call_args_list == [call("test99.png"), call("test09.png"), call("test00.png")]
+
+    def test_determines_count(self):
+        assert 1234 == count_files("%d", 1000, lambda name: int(name) < 1234)
+
 
 
 class TestRandomChoice:
@@ -60,33 +76,6 @@ class TestMultiClassLabel:
         assert multi_class_label([0], 1).dtype != np.bool
 
 
-class TestScale:
-    def test_basic_average(self):
-        assert_array_equal(Scale([[5]], 100).average, [5])
-
-    def test_average_of_two_samples(self):
-        assert_array_equal(Scale([[5], [7]], 100).average, [6])
-
-    def test_vector_of_averages(self):
-        assert_array_equal(Scale([[2, 3]], 100).average, [2, 3])
-
-    def test_lower_bound_deviation(self):
-        assert_array_equal(Scale([[5]], 100).deviation, [0.01])
-
-    def test_standard_deviation_of_two_samples(self):
-        assert_array_equal(Scale([[5], [7]], 100).deviation, [1])
-
-    def test_vector_of_deviations(self):
-        assert_array_equal(Scale([[2, 3], [2, 5]], 100).deviation, [0.01, 1])
-
-    def test_subtract_average(self):
-        assert_array_equal(Scale([[5], [7]], 100)([[9], [10]]), [[3], [4]])
-
-    def test_normalise_standard_deviation(self):
-        assert_array_equal(Scale([[4], [8]], 100)([[6], [8]]), [[0], [1]])
-
-    def test_normalise_feature_vector(self):
-        assert_array_equal(Scale([[0, 0], [2, 4]], 100)([[0, 0], [1, 2], [2, 4]]), [[-1, -1], [0, 0], [1, 1]])
-
-    def test_limit_scaling(self):
-        assert_array_equal(Scale([[0]], 100)([[1]]), [[100]])
+class TestOffset:
+    def test_trivial(self):
+        assert_array_equal(offset(0, [2, 3, 5]), [2, 3, 5])

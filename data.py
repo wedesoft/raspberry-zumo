@@ -1,3 +1,4 @@
+import os.path
 import numpy as np
 
 
@@ -16,10 +17,14 @@ def multi_class_label(labels, num_classes):
     return np.where(np.equal(index % num_classes, np.expand_dims(labels, -1)), 1, 0)
 
 
-class Scale:
-    def __init__(self, features, max_scale=10.0):
-        self.average = np.average(features, axis=0)
-        self.deviation = np.maximum(np.std(features, axis=0), 1.0 / max_scale)
+def count_files(pattern, multiplier=1000, exist=os.path.exists):
+    count = -1
+    while multiplier > 0:
+        while exist(pattern % (count + multiplier)):
+            count += multiplier
+        multiplier //= 10
+    return count + 1
 
-    def __call__(self, values):
-        return np.subtract(values, self.average) / self.deviation
+
+def offset(amount, array):
+    return array

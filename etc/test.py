@@ -11,24 +11,25 @@ import cv2
 import tensorflow as tf
 import numpy as np
 from tqdm import tqdm
-from data import random_selection, Scale
+from data import random_selection, count_files
 
 
+# tf.Variable(....)
 if __name__ == '__main__':
     iterations = 100000
     p = 10
     w, h = 320 // p, 240 // p
     s = 1
-    n = 1951 // s
+    n = count_files("images/image%04d.jpg") // s
     n_train = n * 6 // 10
     n_validation = n * 2 // 10
     b = 20
     n_div = 5
     n_out = n_div * 2 + 1
-    regularize = 0.016 # validation: 0.991732
-    regularize = 0.032 # validation: 0.9249
-    regularize = 0.064 # validation: 0.891654
-    regularize = 0.128 # validation: 0.85049
+    regularize = 0.016 # validation:
+    regularize = 0.032 # validation:
+    regularize = 0.128 # validation: 1.08481
+    regularize = 0.064 # validation:
     alpha = 0.05
     data = np.zeros((n, h, w))
     label = np.zeros((n, n_out))
@@ -40,12 +41,11 @@ if __name__ == '__main__':
     training = data[:n_train], label[:n_train]
     validation = data[n_train:n_train+n_validation], label[n_train:n_train+n_validation]
     testing = data[n_train+n_validation:], label[n_train+n_validation:]
-    scale = Scale(training[0], 1000.0)
     n_hidden = 4
     x = tf.placeholder(tf.float32, [None, h, w], name='x')
     y = tf.placeholder(tf.float32, [None, n_out])
-    avg = tf.constant(scale.average.astype(np.float32))
-    dev = tf.constant(scale.deviation.astype(np.float32))
+    avg = 128
+    dev = 64
     xs = tf.reshape((x - avg) / dev, [-1, h * w])
     m1 = tf.Variable(tf.truncated_normal([h * w, n_hidden], stddev=1.0/(h * w)))
     b1 = tf.Variable(tf.truncated_normal([n_hidden]))
@@ -87,14 +87,14 @@ if __name__ == '__main__':
     for i in progress:
         selection = random_selection(b, train[x], train[y])
         batch = {x: selection[0], y: selection[1]}
-        c = c * 0.99 + 0.01 * session.run(cost, feed_dict=batch)
+        c = c * 0.999 + 0.001 * session.run(cost, feed_dict=batch)
         progress.set_description('cost: %8.6f' % c)
         session.run(step, feed_dict=batch)
 
-    print('training:', session.run(cost, feed_dict=train))
-    print('validation:', session.run(cost, feed_dict=validate))
-    print('error:', np.average(np.abs(session.run(prediction, feed_dict=validate) - session.run(tf.argmax(y, axis=-1), feed_dict = validate))))
-    print('test:', np.average(np.abs(session.run(prediction, feed_dict=test) - session.run(tf.argmax(y, axis=-1), feed_dict = test))))
+    print('training cost:', session.run(cost, feed_dict=train))
+    print('validation cost:', session.run(cost, feed_dict=validate))
+    print('validation error:', np.sqrt(np.average((session.run(prediction, feed_dict=validate) - session.run(tf.argmax(y, axis=-1), feed_dict = validate)) ** 2)))
+    print('test error:', np.sqrt(np.average((session.run(prediction, feed_dict=test) - session.run(tf.argmax(y, axis=-1), feed_dict = test)) ** 2)))
     tf.add_to_collection('prediction', prediction)
     saver.save(session, './model')
 
