@@ -83,6 +83,9 @@ class TestOffset:
     def test_apply_offset(self):
         assert_array_equal(Offset(3)([2, 3, 5]), [5, 6, 8])
 
+    def test_combine_operations(self):
+        assert_array_equal(Offset(3, Scale(2))([2, 3, 5]), [7, 9, 13])
+
 
 class TestScale:
     def test_trivial(self):
@@ -90,3 +93,6 @@ class TestScale:
 
     def test_use_scale_factor(self):
         assert_array_equal(Scale(2)([2, 3, 5]), [4, 6, 10])
+
+    def test_combine_operations(self):
+        assert_array_equal(Scale(2, Offset(3))([2, 3, 5]), [10, 12, 16])

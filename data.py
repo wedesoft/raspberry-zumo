@@ -27,10 +27,15 @@ def count_files(pattern, multiplier=1000, exist=os.path.exists):
     return count + 1
 
 
-class Operation:
-    def __init__(self, operation):
-        self.x = tf.placeholder(tf.float32, name='x')
-        self.operation = operation(self.x)
+class Operation(object):
+    def __init__(self, operation, operand=None):
+        if operand:
+            self.x = operand.x
+            operand = operand.operation
+        else:
+            self.x = tf.placeholder(tf.float32, name='x')
+            operand = self.x
+        self.operation = operation(operand)
 
     def __call__(self, value):
         with tf.Session() as session:
@@ -38,10 +43,10 @@ class Operation:
 
 
 class Offset(Operation):
-    def __init__(self, offset):
-        super(Offset, self).__init__(lambda x: tf.add(x, offset))
+    def __init__(self, offset, operand=None):
+        super(Offset, self).__init__(lambda x: tf.add(x, offset), operand)
 
 
 class Scale(Operation):
-    def __init__(self, scale):
-        super(Scale, self).__init__(lambda x: tf.multiply(x, scale))
+    def __init__(self, scale, operand=None):
+        super(Scale, self).__init__(lambda x: tf.multiply(x, scale), operand)
