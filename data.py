@@ -50,3 +50,8 @@ class Offset(Operation):
 class Scale(Operation):
     def __init__(self, scale, operand=None):
         super(Scale, self).__init__(lambda x: tf.multiply(x, scale), operand)
+
+
+class Reshape(Operation):
+    def __init__(self, shape, operand=None):
+        super(Reshape, self).__init__(lambda x: tf.reshape(x, shape), operand)

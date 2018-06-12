@@ -96,3 +96,14 @@ class TestScale:
 
     def test_combine_operations(self):
         assert_array_equal(Scale(2, Offset(3))([2, 3, 5]), [10, 12, 16])
+
+
+class TestReshape:
+    def test_trivial(self):
+        assert_array_equal(Reshape([-1])([2, 3, 5, 7, 11, 13]), [2, 3, 5, 7, 11, 13])
+
+    def test_reshaping(self):
+        assert_array_equal(Reshape([-1, 3])([2, 3, 5, 7, 11, 13]), [[2, 3, 5], [7, 11, 13]])
+
+    def test_combine_operations(self):
+        assert_array_equal(Reshape([-1, 2], Offset(1))([2, 3, 5, 7]), [[3, 6], [6, 8]])
