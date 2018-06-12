@@ -11,7 +11,7 @@ import cv2
 import tensorflow as tf
 import numpy as np
 from tqdm import tqdm
-from data import random_selection, count_files, Scale, Offset
+from data import random_selection, count_files, Scale, Offset, Reshape
 
 
 if __name__ == '__main__':
@@ -24,12 +24,12 @@ if __name__ == '__main__':
     b = 20
     n_div = 5
     n_out = n_div * 2 + 1
-    regularize = 0.128 # validation error: 2.2275
-    regularize = 0.064 # validation error: 2.1703
-    regularize = 0.032 # validation error: 2.0242
+    regularize = 0.128 # validation error:
+    regularize = 0.064 # validation error:
+    regularize = 0.032 # validation error:
     regularize = 0.016 # validation error: 1.6969
     regularize = 0.008 # validation error: 2.1309
-    regularize = 0.016
+    regularize = 0.032
     alpha = 0.05
     data = np.zeros((n, h, w))
     label = np.zeros((n, n_out))
@@ -42,10 +42,10 @@ if __name__ == '__main__':
     validation = data[n_train:n_train+n_validation], label[n_train:n_train+n_validation]
     testing = data[n_train+n_validation:], label[n_train+n_validation:]
     n_hidden = 4
-    feature_scale = Scale(1.0/64, Offset(-128))
-    x = feature_scale.x
     y = tf.placeholder(tf.float32, [None, n_out])
-    xs = tf.reshape(feature_scale.operation, [-1, h * w])
+    reshape = Reshape([-1, h * w], Scale(1.0/64, Offset(-128)))
+    x = reshape.x
+    xs = reshape.operation
     m1 = tf.Variable(tf.truncated_normal([h * w, n_hidden], stddev=1.0/(h * w)))
     b1 = tf.Variable(tf.truncated_normal([n_hidden]))
     m2 = tf.Variable(tf.truncated_normal([n_hidden, n_out], stddev=1.0/n_hidden))
