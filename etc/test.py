@@ -24,12 +24,10 @@ if __name__ == '__main__':
     b = 20
     n_div = 5
     n_out = n_div * 2 + 1
-    regularize = 0.128 # validation error:
-    regularize = 0.064 # validation error:
-    regularize = 0.032 # validation error:
+    regularize = 0.032 # validation error: 2.1406
     regularize = 0.016 # validation error: 1.6969
     regularize = 0.008 # validation error: 2.1309
-    regularize = 0.032
+    regularize = 0.016
     alpha = 0.05
     data = np.zeros((n, h, w))
     label = np.zeros((n, n_out))
