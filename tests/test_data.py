@@ -78,4 +78,15 @@ class TestMultiClassLabel:
 
 class TestOffset:
     def test_trivial(self):
-        assert_array_equal(offset(0, [2, 3, 5]), [2, 3, 5])
+        assert_array_equal(Offset(0)([2, 3, 5]), [2, 3, 5])
+
+    def test_apply_offset(self):
+        assert_array_equal(Offset(3)([2, 3, 5]), [5, 6, 8])
+
+
+class TestScale:
+    def test_trivial(self):
+        assert_array_equal(Scale(1)([2, 3, 5]), [2, 3, 5])
+
+    def test_use_scale_factor(self):
+        assert_array_equal(Scale(2)([2, 3, 5]), [4, 6, 10])

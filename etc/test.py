@@ -14,28 +14,26 @@ from tqdm import tqdm
 from data import random_selection, count_files
 
 
-# tf.Variable(....)
 if __name__ == '__main__':
     iterations = 100000
     p = 10
     w, h = 320 // p, 240 // p
-    s = 1
-    n = count_files("images/image%04d.jpg") // s
+    n = count_files("images/image%04d.jpg")
     n_train = n * 6 // 10
     n_validation = n * 2 // 10
     b = 20
     n_div = 5
     n_out = n_div * 2 + 1
-    regularize = 0.016 # validation:
-    regularize = 0.032 # validation:
-    regularize = 0.128 # validation: 1.08481
-    regularize = 0.064 # validation:
+    regularize = 0.128 # validation error: 2.2275
+    regularize = 0.064 # validation error: 2.1703
+    regularize = 0.032 # validation error: 2.0242
+    regularize = 0.016 # validation error:
     alpha = 0.05
     data = np.zeros((n, h, w))
     label = np.zeros((n, n_out))
     for i in range(n):
-        data[i] = cv2.imread("images/image%04d.jpg" % (i * s), cv2.IMREAD_GRAYSCALE)[::p, ::p]
-        left_drive, right_drive = yaml.load(open("images/image%04d.yml" % (i * s)))
+        data[i] = cv2.imread("images/image%04d.jpg" % i, cv2.IMREAD_GRAYSCALE)[::p, ::p]
+        left_drive, right_drive = yaml.load(open("images/image%04d.yml" % i))
         label[i, round(left_drive / 100.0 * n_div + n_div)] = 1
     data, label = random_selection(n, data, label)
     training = data[:n_train], label[:n_train]

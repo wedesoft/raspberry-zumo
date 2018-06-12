@@ -1,5 +1,6 @@
 import os.path
 import numpy as np
+import tensorflow as tf
 
 
 def random_choice(count, size):
@@ -26,5 +27,21 @@ def count_files(pattern, multiplier=1000, exist=os.path.exists):
     return count + 1
 
 
-def offset(amount, array):
-    return array
+class Operation:
+    def __init__(self, operation):
+        self.x = tf.placeholder(tf.float32, name='x')
+        self.operation = operation(self.x)
+
+    def __call__(self, value):
+        with tf.Session() as session:
+            return session.run(self.operation, feed_dict={self.x: value})
+
+
+class Offset(Operation):
+    def __init__(self, offset):
+        super(Offset, self).__init__(lambda x: tf.add(x, offset))
+
+
+class Scale(Operation):
+    def __init__(self, scale):
+        super(Scale, self).__init__(lambda x: tf.multiply(x, scale))
