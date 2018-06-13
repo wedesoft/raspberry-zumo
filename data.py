@@ -39,6 +39,7 @@ class Operation(object):
 
     def __call__(self, value):
         with tf.Session() as session:
+            session.run(tf.global_variables_initializer())
             return session.run(self.operation, feed_dict={self.x: value})
 
 
@@ -60,3 +61,9 @@ class Reshape(Operation):
 class Sigmoid(Operation):
     def __init__(self, operand=None):
         super(Sigmoid, self).__init__(lambda x: tf.sigmoid(x), operand)
+
+
+class Weights(Operation):
+    def __init__(self, weights):
+        self.weights = tf.Variable(np.float32(weights))
+        super(Weights, self).__init__(lambda x: tf.matmul(x, self.weights))

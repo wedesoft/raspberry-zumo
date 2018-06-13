@@ -115,3 +115,8 @@ class TestSigmoid:
 
     def test_nest_operations(self):
         assert_array_almost_equal(Sigmoid(Offset(-20))([-20, 0, 20]), [0.5, 1, 1])
+
+
+class TestWeights:
+    def test_apply_weights(self):
+        assert_array_equal(Weights([[2, 3, 5], [3, 5, 7]])([[2, 3]]), [[13, 21, 31]])

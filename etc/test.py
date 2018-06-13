@@ -11,7 +11,7 @@ import cv2
 import tensorflow as tf
 import numpy as np
 from tqdm import tqdm
-from data import random_selection, count_files, Scale, Offset, Reshape, Sigmoid
+from data import random_selection, count_files, Scale, Offset, Reshape, Sigmoid, Weights
 
 
 if __name__ == '__main__':
@@ -24,10 +24,9 @@ if __name__ == '__main__':
     b = 20
     n_div = 5
     n_out = n_div * 2 + 1
-    regularize = 0.032 # validation error:
-    regularize = 0.016 # validation error:
-    regularize = 0.016 # validation error: 1.95
-    regularize = 0.008 # validation error:
+    regularize = 0.032 # validation error: 2.055
+    regularize = 0.016 # validation error: 1.951
+    regularize = 0.008 # validation error: 2.375
     alpha = 0.05
     n_hidden = 10
     data = np.zeros((n, h, w))
@@ -88,8 +87,7 @@ if __name__ == '__main__':
         progress.set_description('cost: %8.6f' % c)
         session.run(step, feed_dict=batch)
 
-    print('training cost:', session.run(cost, feed_dict=train))
-    print('validation cost:', session.run(cost, feed_dict=validate))
+    print('training error:', np.sqrt(np.average((session.run(prediction, feed_dict=train) - session.run(tf.argmax(y, axis=-1), feed_dict = train)) ** 2)))
     print('validation error:', np.sqrt(np.average((session.run(prediction, feed_dict=validate) - session.run(tf.argmax(y, axis=-1), feed_dict = validate)) ** 2)))
     print('test error:', np.sqrt(np.average((session.run(prediction, feed_dict=test) - session.run(tf.argmax(y, axis=-1), feed_dict = test)) ** 2)))
     tf.add_to_collection('prediction', prediction)
