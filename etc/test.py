@@ -11,7 +11,7 @@ import cv2
 import tensorflow as tf
 import numpy as np
 from tqdm import tqdm
-from data import random_selection, count_files, Scale, Offset, Reshape
+from data import random_selection, count_files, Scale, Offset, Reshape, Sigmoid
 
 
 if __name__ == '__main__':
@@ -24,11 +24,12 @@ if __name__ == '__main__':
     b = 20
     n_div = 5
     n_out = n_div * 2 + 1
-    regularize = 0.032 # validation error: 2.1406
-    regularize = 0.016 # validation error: 1.6969
-    regularize = 0.008 # validation error: 2.1309
-    regularize = 0.016
+    regularize = 0.032 # validation error:
+    regularize = 0.016 # validation error:
+    regularize = 0.016 # validation error: 1.95
+    regularize = 0.008 # validation error:
     alpha = 0.05
+    n_hidden = 10
     data = np.zeros((n, h, w))
     label = np.zeros((n, n_out))
     for i in range(n):
@@ -39,7 +40,6 @@ if __name__ == '__main__':
     training = data[:n_train], label[:n_train]
     validation = data[n_train:n_train+n_validation], label[n_train:n_train+n_validation]
     testing = data[n_train+n_validation:], label[n_train+n_validation:]
-    n_hidden = 4
     y = tf.placeholder(tf.float32, [None, n_out])
     reshape = Reshape([-1, h * w], Scale(64, Offset(128)))
     x = reshape.x
@@ -51,8 +51,8 @@ if __name__ == '__main__':
     theta = [m1, b1, m2, b2]
     reg_candidates = [m1, m2]
 
-    a0 = tf.sigmoid(xs)
-    z1 = tf.add(tf.matmul(a0, m1), b1)
+    a0 = Sigmoid(reshape)
+    z1 = tf.add(tf.matmul(a0.operation, m1), b1)
     a1 = tf.sigmoid(z1)
     z2 = tf.add(tf.matmul(a1, m2), b2)
     a2 = tf.sigmoid(z2)

@@ -1,6 +1,6 @@
 import pytest
 from mock import MagicMock, call
-from numpy.testing import assert_array_equal
+from numpy.testing import assert_array_equal, assert_array_almost_equal
 import data
 from data import *
 
@@ -83,7 +83,7 @@ class TestOffset:
     def test_apply_offset(self):
         assert_array_equal(Offset(-3)([2, 3, 5]), [5, 6, 8])
 
-    def test_combine_operations(self):
+    def test_nest_operations(self):
         assert_array_equal(Offset(-3, Scale(0.5))([2, 3, 5]), [7, 9, 13])
 
 
@@ -94,7 +94,7 @@ class TestScale:
     def test_use_scale_factor(self):
         assert_array_equal(Scale(0.5)([2, 3, 5]), [4, 6, 10])
 
-    def test_combine_operations(self):
+    def test_nest_operations(self):
         assert_array_equal(Scale(0.5, Offset(-3))([2, 3, 5]), [10, 12, 16])
 
 
@@ -105,5 +105,13 @@ class TestReshape:
     def test_reshaping(self):
         assert_array_equal(Reshape([-1, 3])([2, 3, 5, 7, 11, 13]), [[2, 3, 5], [7, 11, 13]])
 
-    def test_combine_operations(self):
+    def test_nest_operations(self):
         assert_array_equal(Reshape([-1, 2], Offset(-1))([2, 3, 5, 7]), [[3, 4], [6, 8]])
+
+
+class TestSigmoid:
+    def test_values(self):
+        assert_array_almost_equal(Sigmoid()([-20, 0, 20]), [0, 0.5, 1])
+
+    def test_nest_operations(self):
+        assert_array_almost_equal(Sigmoid(Offset(-20))([-20, 0, 20]), [0.5, 1, 1])

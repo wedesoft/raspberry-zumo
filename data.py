@@ -55,3 +55,8 @@ class Scale(Operation):
 class Reshape(Operation):
     def __init__(self, shape, operand=None):
         super(Reshape, self).__init__(lambda x: tf.reshape(x, shape), operand)
+
+
+class Sigmoid(Operation):
+    def __init__(self, operand=None):
+        super(Sigmoid, self).__init__(lambda x: tf.sigmoid(x), operand)
