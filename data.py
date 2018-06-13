@@ -44,12 +44,12 @@ class Operation(object):
 
 class Offset(Operation):
     def __init__(self, offset, operand=None):
-        super(Offset, self).__init__(lambda x: tf.add(x, offset), operand)
+        super(Offset, self).__init__(lambda x: tf.add(x, -offset), operand)
 
 
 class Scale(Operation):
     def __init__(self, scale, operand=None):
-        super(Scale, self).__init__(lambda x: tf.multiply(x, scale), operand)
+        super(Scale, self).__init__(lambda x: tf.multiply(x, 1.0 / scale), operand)
 
 
 class Reshape(Operation):

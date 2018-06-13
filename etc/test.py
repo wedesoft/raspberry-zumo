@@ -41,7 +41,7 @@ if __name__ == '__main__':
     testing = data[n_train+n_validation:], label[n_train+n_validation:]
     n_hidden = 4
     y = tf.placeholder(tf.float32, [None, n_out])
-    reshape = Reshape([-1, h * w], Scale(1.0/64, Offset(-128)))
+    reshape = Reshape([-1, h * w], Scale(64, Offset(128)))
     x = reshape.x
     xs = reshape.operation
     m1 = tf.Variable(tf.truncated_normal([h * w, n_hidden], stddev=1.0/(h * w)))

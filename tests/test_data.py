@@ -81,10 +81,10 @@ class TestOffset:
         assert_array_equal(Offset(0)([2, 3, 5]), [2, 3, 5])
 
     def test_apply_offset(self):
-        assert_array_equal(Offset(3)([2, 3, 5]), [5, 6, 8])
+        assert_array_equal(Offset(-3)([2, 3, 5]), [5, 6, 8])
 
     def test_combine_operations(self):
-        assert_array_equal(Offset(3, Scale(2))([2, 3, 5]), [7, 9, 13])
+        assert_array_equal(Offset(-3, Scale(0.5))([2, 3, 5]), [7, 9, 13])
 
 
 class TestScale:
@@ -92,10 +92,10 @@ class TestScale:
         assert_array_equal(Scale(1)([2, 3, 5]), [2, 3, 5])
 
     def test_use_scale_factor(self):
-        assert_array_equal(Scale(2)([2, 3, 5]), [4, 6, 10])
+        assert_array_equal(Scale(0.5)([2, 3, 5]), [4, 6, 10])
 
     def test_combine_operations(self):
-        assert_array_equal(Scale(2, Offset(3))([2, 3, 5]), [10, 12, 16])
+        assert_array_equal(Scale(0.5, Offset(-3))([2, 3, 5]), [10, 12, 16])
 
 
 class TestReshape:
@@ -106,4 +106,4 @@ class TestReshape:
         assert_array_equal(Reshape([-1, 3])([2, 3, 5, 7, 11, 13]), [[2, 3, 5], [7, 11, 13]])
 
     def test_combine_operations(self):
-        assert_array_equal(Reshape([-1, 2], Offset(1))([2, 3, 5, 7]), [[3, 6], [6, 8]])
+        assert_array_equal(Reshape([-1, 2], Offset(-1))([2, 3, 5, 7]), [[3, 4], [6, 8]])
