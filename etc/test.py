@@ -11,7 +11,7 @@ import cv2
 import tensorflow as tf
 import numpy as np
 from tqdm import tqdm
-from data import random_selection, count_files, Scale, Offset, Reshape, Sigmoid, Weights, Bias
+from data import random_selection, count_files, Scale, Offset, Reshape, ReLU, Sigmoid, Weights, Bias
 
 
 if __name__ == '__main__':
@@ -24,10 +24,10 @@ if __name__ == '__main__':
     b = 20
     n_div = 5
     n_out = n_div * 2 + 1
-    regularize = 0.032 # validation error: 2.055
-    regularize = 0.016 # validation error: 1.951
-    regularize = 0.008 # validation error: 2.375
-    alpha = 0.05
+    regularize = 0.008 # validation error:
+    regularize = 0.016 # validation error:
+    regularize = 0.004 # validation error:
+    alpha = 0.5
     n_hidden = 10
     data = np.zeros((n, h, w))
     label = np.zeros((n, n_out))
@@ -41,10 +41,10 @@ if __name__ == '__main__':
     testing = data[n_train+n_validation:], label[n_train+n_validation:]
     y = tf.placeholder(tf.float32, [None, n_out])
 
-    a0 = Sigmoid(Reshape([-1, h * w], Scale(64, Offset(128))))
+    a0 = ReLU(Reshape([-1, h * w], Scale(64, Offset(128))))
     m1 = Weights(np.random.normal(np.full((h * w, n_hidden), 1.0 / (h * w))), a0)
     z1 = Bias(np.random.normal(np.full(n_hidden, 1.0)), m1)
-    a1 = Sigmoid(z1)
+    a1 = ReLU(z1)
     m2 = Weights(np.random.normal(np.full((n_hidden, n_out), 1.0 / n_hidden)), a1)
     z2 = Bias(np.random.normal(np.full(n_out, 1.0)), m2)
     a2 = Sigmoid(z2)
@@ -60,10 +60,7 @@ if __name__ == '__main__':
     reg_term = reduce(add, [tf.reduce_sum(tf.square(parameter)) for parameter in reg_candidates]) / (m * 2)
     safe_log = lambda v: tf.log(tf.clip_by_value(v, 1e-10, 1.0))
     error_term = -tf.reduce_sum(y * safe_log(h) + (1 - y) * safe_log(1 - h)) / m
-    if regularize > 0:
-        cost = error_term + regularize * reg_term
-    else:
-        cost = error_term
+    cost = error_term + regularize * reg_term
     rmsd = tf.reduce_sum(tf.square(h - y)) / (2 * m)
     dtheta = tf.gradients(cost, theta)
     step = [tf.assign(value, tf.subtract(value, tf.multiply(alpha, dvalue))) for value, dvalue in zip(theta, dtheta)]

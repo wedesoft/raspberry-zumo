@@ -63,6 +63,11 @@ class Sigmoid(Operation):
         super(Sigmoid, self).__init__(lambda x: tf.sigmoid(x), operand)
 
 
+class ReLU(Operation):
+    def __init__(self, operand=None):
+        super(ReLU, self).__init__(lambda x: tf.nn.relu(x), operand)
+
+
 class Weights(Operation):
     def __init__(self, weights, operand=None):
         self.weights = tf.Variable(np.float32(weights))
