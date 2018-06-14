@@ -120,3 +120,9 @@ class TestSigmoid:
 class TestWeights:
     def test_apply_weights(self):
         assert_array_equal(Weights([[2, 3, 5], [3, 5, 7]])([[2, 3]]), [[13, 21, 31]])
+
+    def test_single_input(self):
+        assert_array_equal(Weights([[2, 3, 5], [3, 5, 7]])([2, 3]), [13, 21, 31])
+
+    def test_nest_operations(self):
+        assert_array_equal(Weights([[2, 3, 5], [3, 5, 7]], Offset(-1))([2, 3]), [18, 29, 43])

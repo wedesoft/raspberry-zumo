@@ -64,6 +64,13 @@ class Sigmoid(Operation):
 
 
 class Weights(Operation):
-    def __init__(self, weights):
+    def __init__(self, weights, operand=None):
         self.weights = tf.Variable(np.float32(weights))
-        super(Weights, self).__init__(lambda x: tf.matmul(x, self.weights))
+        super(Weights, self).__init__(lambda x: tf.matmul(x, self.weights), operand)
+
+    def __call__(self, value):
+        value = np.float32(value)
+        if len(value.shape) < 2:
+            return super(Weights, self).__call__([value])[0]
+        else:
+            return super(Weights, self).__call__(value)

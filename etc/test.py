@@ -43,21 +43,23 @@ if __name__ == '__main__':
     reshape = Reshape([-1, h * w], Scale(64, Offset(128)))
     x = reshape.x
     xs = reshape.operation
-    m1 = tf.Variable(tf.truncated_normal([h * w, n_hidden], stddev=1.0/(h * w)))
+    #m1 = tf.Variable(tf.truncated_normal([h * w, n_hidden], stddev=1.0/(h * w)))
     b1 = tf.Variable(tf.truncated_normal([n_hidden]))
     m2 = tf.Variable(tf.truncated_normal([n_hidden, n_out], stddev=1.0/n_hidden))
     b2 = tf.Variable(tf.truncated_normal([n_out]))
-    theta = [m1, b1, m2, b2]
-    reg_candidates = [m1, m2]
 
     a0 = Sigmoid(reshape)
-    z1 = tf.add(tf.matmul(a0.operation, m1), b1)
+    m1 = Weights(np.random.normal(np.full((h * w, n_hidden), 1.0 / (h * w))), a0)
+    z1 = tf.add(m1.operation, b1)
     a1 = tf.sigmoid(z1)
     z2 = tf.add(tf.matmul(a1, m2), b2)
     a2 = tf.sigmoid(z2)
     h = a2
     prediction = tf.argmax(h, axis=-1)
     #prediction = (tf.cast(tf.argmax(h, axis=-1), tf.float32) - n_div) * 100 / n_div
+
+    theta = [m1.weights, b1, m2, b2]
+    reg_candidates = [m1.weights, m2]
 
     m = tf.cast(tf.size(y) / n_out, tf.float32)
     reg_term = reduce(add, [tf.reduce_sum(tf.square(parameter)) for parameter in reg_candidates]) / (m * 2)
