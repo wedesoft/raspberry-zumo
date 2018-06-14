@@ -40,17 +40,15 @@ if __name__ == '__main__':
     validation = data[n_train:n_train+n_validation], label[n_train:n_train+n_validation]
     testing = data[n_train+n_validation:], label[n_train+n_validation:]
     y = tf.placeholder(tf.float32, [None, n_out])
-    reshape = Reshape([-1, h * w], Scale(64, Offset(128)))
-    x = reshape.x
-    xs = reshape.operation
 
-    a0 = Sigmoid(reshape)
+    a0 = Sigmoid(Reshape([-1, h * w], Scale(64, Offset(128))))
     m1 = Weights(np.random.normal(np.full((h * w, n_hidden), 1.0 / (h * w))), a0)
     z1 = Bias(np.random.normal(np.full(n_hidden, 1.0)), m1)
     a1 = Sigmoid(z1)
     m2 = Weights(np.random.normal(np.full((n_hidden, n_out), 1.0 / n_hidden)), a1)
     z2 = Bias(np.random.normal(np.full(n_out, 1.0)), m2)
     a2 = Sigmoid(z2)
+    x = a2.x
     h = a2.operation
     prediction = tf.argmax(h, axis=-1)
     #prediction = (tf.cast(tf.argmax(h, axis=-1), tf.float32) - n_div) * 100 / n_div
