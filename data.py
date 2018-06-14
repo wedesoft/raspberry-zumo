@@ -74,3 +74,9 @@ class Weights(Operation):
             return super(Weights, self).__call__([value])[0]
         else:
             return super(Weights, self).__call__(value)
+
+
+class Bias(Operation):
+    def __init__(self, bias, operand=None):
+        self.bias = tf.Variable(np.float32(bias))
+        super(Bias, self).__init__(lambda x: tf.add(x, self.bias), operand)

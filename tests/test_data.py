@@ -126,3 +126,14 @@ class TestWeights:
 
     def test_nest_operations(self):
         assert_array_equal(Weights([[2, 3, 5], [3, 5, 7]], Offset(-1))([2, 3]), [18, 29, 43])
+
+
+class TestBias:
+    def test_apply_offset(self):
+        assert_array_equal(Bias([2, 3])([5, 7]), [7, 10])
+
+    def test_nesting(self):
+        assert_array_equal(Bias([2, 3], Offset(-1))([5, 7]), [8, 11])
+
+    def test_batch(self):
+        assert_array_equal(Bias([2, 3])([[2, 3], [5, 7]]), [[4, 6], [7, 10]])
