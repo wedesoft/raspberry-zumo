@@ -31,9 +31,11 @@ class Operation(object):
     def __init__(self, operation, operand=None):
         if operand:
             self.x = operand.x
+            self.variables_ = operand.variables()
             operand = operand.operation
         else:
             self.x = tf.placeholder(tf.float32, name='x')
+            self.variables_ = []
             operand = self.x
         self.operation = operation(operand)
 
@@ -41,6 +43,9 @@ class Operation(object):
         with tf.Session() as session:
             session.run(tf.global_variables_initializer())
             return session.run(self.operation, feed_dict={self.x: value})
+
+    def variables(self):
+        return self.variables_
 
 
 class Offset(Operation):
@@ -80,8 +85,14 @@ class Weights(Operation):
         else:
             return super(Weights, self).__call__(value)
 
+    def variables(self):
+        return super(Weights, self).variables() + [self.weights]
+
 
 class Bias(Operation):
     def __init__(self, bias, operand=None):
         self.bias = tf.Variable(np.float32(bias))
         super(Bias, self).__init__(lambda x: tf.add(x, self.bias), operand)
+
+    def variables(self):
+        return super(Bias, self).variables() + [self.bias]

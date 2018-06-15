@@ -86,6 +86,9 @@ class TestOffset:
     def test_nest_operations(self):
         assert_array_equal(Offset(-3, Scale(0.5))([2, 3, 5]), [7, 9, 13])
 
+    def test_no_variables(self):
+        assert Offset(0).variables() == []
+
 
 class TestScale:
     def test_trivial(self):
@@ -135,6 +138,15 @@ class TestWeights:
     def test_nest_operations(self):
         assert_array_equal(Weights([[2, 3, 5], [3, 5, 7]], Offset(-1))([2, 3]), [18, 29, 43])
 
+    def test_get_variables(self):
+        weights = Weights([[2, 3, 5], [3, 5, 7]])
+        assert weights.variables() == [weights.weights]
+
+    def test_variables_of_nested_expression(self):
+        weights = Weights([[2, 3], [3, 5]])
+        weights2 = Weights([[2, 3], [3, 5]], weights)
+        assert weights2.variables() == [weights.weights, weights2.weights]
+
 
 class TestBias:
     def test_apply_offset(self):
@@ -145,3 +157,12 @@ class TestBias:
 
     def test_batch(self):
         assert_array_equal(Bias([2, 3])([[2, 3], [5, 7]]), [[4, 6], [7, 10]])
+
+    def test_get_variables(self):
+        bias = Bias([2, 3])
+        assert bias.variables() == [bias.bias]
+
+    def test_variables_of_nested_expression(self):
+        bias = Bias([5, 7])
+        bias2 = Bias([2, 3], bias)
+        assert bias2.variables() == [bias.bias, bias2.bias]

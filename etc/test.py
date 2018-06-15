@@ -53,7 +53,7 @@ if __name__ == '__main__':
     prediction = tf.argmax(h, axis=-1)
     #prediction = (tf.cast(tf.argmax(h, axis=-1), tf.float32) - n_div) * 100 / n_div
 
-    theta = [m1.weights, z1.bias, m2.weights, z2.bias]
+    theta = a2.variables()
     reg_candidates = [m1.weights, m2.weights]
 
     m = tf.cast(tf.size(y) / n_out, tf.float32)
