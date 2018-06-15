@@ -24,29 +24,30 @@ if __name__ == '__main__':
     b = 20
     n_div = 5
     n_out = n_div * 2 + 1
-    regularize = 0.008 # validation error:
-    regularize = 0.016 # validation error:
     regularize = 0.004 # validation error:
+    regularize = 0.016 # validation error: 
+    regularize = 0.008 # validation error:
     alpha = 0.5
-    n_hidden = 10
+    n_hidden = 20
     data = np.zeros((n, h, w))
-    label = np.zeros((n, n_out))
+    label = np.zeros((n, 2, n_out))
     for i in range(n):
         data[i] = cv2.imread("images/image%04d.jpg" % i, cv2.IMREAD_GRAYSCALE)[::p, ::p]
         left_drive, right_drive = yaml.load(open("images/image%04d.yml" % i))
-        label[i, round(left_drive / 100.0 * n_div + n_div)] = 1
+        label[i, 0, round(left_drive  / 100.0 * n_div + n_div)] = 1
+        label[i, 1, round(right_drive / 100.0 * n_div + n_div)] = 1
     np.random.seed(0)
     data, label = random_selection(n, data, label)
     training = data[:n_train], label[:n_train]
     validation = data[n_train:n_train+n_validation], label[n_train:n_train+n_validation]
     testing = data[n_train+n_validation:], label[n_train+n_validation:]
-    y = tf.placeholder(tf.float32, [None, n_out])
+    y = tf.placeholder(tf.float32, [None, 2, n_out])
 
     a0 = ReLU(Reshape([-1, h * w], Scale(64, Offset(128))))
     m1 = Weights(np.random.normal(np.full((h * w, n_hidden), 1.0 / (h * w))), a0)
     a1 = ReLU(Bias(np.random.normal(np.full(n_hidden, 1.0)), m1))
-    m2 = Weights(np.random.normal(np.full((n_hidden, n_out), 1.0 / n_hidden)), a1)
-    a2 = Sigmoid(Bias(np.random.normal(np.full(n_out, 1.0)), m2))
+    m2 = Weights(np.random.normal(np.full((n_hidden, 2 * n_out), 1.0 / n_hidden)), a1)
+    a2 = Reshape([-1, 2, n_out], Sigmoid(Bias(np.random.normal(np.full(2 * n_out, 1.0)), m2)))
     x, h = a2.x, a2.operation
     prediction = tf.argmax(h, axis=-1)
     #prediction = (tf.cast(tf.argmax(h, axis=-1), tf.float32) - n_div) * 100 / n_div
