@@ -32,10 +32,12 @@ class Operation(object):
         if operand:
             self.x = operand.x
             self.variables_ = operand.variables()
+            self.regularisation_candidates_ = operand.regularisation_candidates()
             operand = operand.operation
         else:
             self.x = tf.placeholder(tf.float32, name='x')
             self.variables_ = []
+            self.regularisation_candidates_ = []
             operand = self.x
         self.operation = operation(operand)
 
@@ -46,6 +48,9 @@ class Operation(object):
 
     def variables(self):
         return self.variables_
+
+    def regularisation_candidates(self):
+        return self.regularisation_candidates_
 
 
 class Offset(Operation):
@@ -87,6 +92,9 @@ class Weights(Operation):
 
     def variables(self):
         return super(Weights, self).variables() + [self.weights]
+
+    def regularisation_candidates(self):
+        return super(Weights, self).regularisation_candidates() + [self.weights]
 
 
 class Bias(Operation):

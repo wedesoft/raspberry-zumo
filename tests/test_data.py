@@ -147,6 +147,20 @@ class TestWeights:
         weights2 = Weights([[2, 3], [3, 5]], weights)
         assert weights2.variables() == [weights.weights, weights2.weights]
 
+    def test_get_regularisation_candidates(self):
+        weights = Weights([[2, 3, 5], [3, 5, 7]])
+        assert weights.regularisation_candidates() == [weights.weights]
+
+    def test_regularisation_candidates_of_nested_expression(self):
+        weights = Weights([[2, 3], [3, 5]])
+        weights2 = Weights([[2, 3], [3, 5]], weights)
+        assert weights2.regularisation_candidates() == [weights.weights, weights2.weights]
+
+    def test_only_weights_are_regularisation_candidates(self):
+        bias = Bias([2, 3])
+        weights = Weights([[2, 3], [5, 7]], bias)
+        assert weights.regularisation_candidates() == [weights.weights]
+
 
 class TestBias:
     def test_apply_offset(self):
@@ -162,7 +176,15 @@ class TestBias:
         bias = Bias([2, 3])
         assert bias.variables() == [bias.bias]
 
+    def test_get_regularisation_candidates(self):
+        assert Bias([2, 3]).regularisation_candidates() == []
+
     def test_variables_of_nested_expression(self):
         bias = Bias([5, 7])
         bias2 = Bias([2, 3], bias)
         assert bias2.variables() == [bias.bias, bias2.bias]
+
+    def test_regularisation_candidates_of_nested_expression(self):
+        weights = Weights([[2, 3], [5, 7]])
+        bias = Bias([2, 3], weights)
+        assert bias.regularisation_candidates() == [weights.weights]

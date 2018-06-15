@@ -35,6 +35,7 @@ if __name__ == '__main__':
         data[i] = cv2.imread("images/image%04d.jpg" % i, cv2.IMREAD_GRAYSCALE)[::p, ::p]
         left_drive, right_drive = yaml.load(open("images/image%04d.yml" % i))
         label[i, round(left_drive / 100.0 * n_div + n_div)] = 1
+    np.random.seed(0)
     data, label = random_selection(n, data, label)
     training = data[:n_train], label[:n_train]
     validation = data[n_train:n_train+n_validation], label[n_train:n_train+n_validation]
@@ -43,18 +44,15 @@ if __name__ == '__main__':
 
     a0 = ReLU(Reshape([-1, h * w], Scale(64, Offset(128))))
     m1 = Weights(np.random.normal(np.full((h * w, n_hidden), 1.0 / (h * w))), a0)
-    z1 = Bias(np.random.normal(np.full(n_hidden, 1.0)), m1)
-    a1 = ReLU(z1)
+    a1 = ReLU(Bias(np.random.normal(np.full(n_hidden, 1.0)), m1))
     m2 = Weights(np.random.normal(np.full((n_hidden, n_out), 1.0 / n_hidden)), a1)
-    z2 = Bias(np.random.normal(np.full(n_out, 1.0)), m2)
-    a2 = Sigmoid(z2)
-    x = a2.x
-    h = a2.operation
+    a2 = Sigmoid(Bias(np.random.normal(np.full(n_out, 1.0)), m2))
+    x, h = a2.x, a2.operation
     prediction = tf.argmax(h, axis=-1)
     #prediction = (tf.cast(tf.argmax(h, axis=-1), tf.float32) - n_div) * 100 / n_div
 
     theta = a2.variables()
-    reg_candidates = [m1.weights, m2.weights]
+    reg_candidates = a2.regularisation_candidates()
 
     m = tf.cast(tf.size(y) / n_out, tf.float32)
     reg_term = reduce(add, [tf.reduce_sum(tf.square(parameter)) for parameter in reg_candidates]) / (m * 2)
