@@ -11,7 +11,7 @@ import cv2
 import tensorflow as tf
 import numpy as np
 from tqdm import tqdm
-from data import random_selection, count_files, Scale, Offset, Reshape, ReLU, Sigmoid, Weights, Bias
+from data import random_selection, count_files, FeatureScale, Reshape, ReLU, Sigmoid, Weights, Bias
 
 
 if __name__ == '__main__':
@@ -34,8 +34,8 @@ if __name__ == '__main__':
     for i in range(n):
         data[i] = cv2.imread("images/image%04d.jpg" % i, cv2.IMREAD_GRAYSCALE)[::p, ::p]
         left_drive, right_drive = yaml.load(open("images/image%04d.yml" % i))
-        label[i, 0, round(left_drive  / 100.0 * n_div + n_div)] = 1
-        label[i, 1, round(right_drive / 100.0 * n_div + n_div)] = 1
+        label[i, 0, int(round(left_drive  / 100.0 * n_div + n_div))] = 1
+        label[i, 1, int(round(right_drive / 100.0 * n_div + n_div))] = 1
     np.random.seed(0)
     data, label = random_selection(n, data, label)
     training = data[:n_train], label[:n_train]
@@ -43,7 +43,7 @@ if __name__ == '__main__':
     testing = data[n_train+n_validation:], label[n_train+n_validation:]
     y = tf.placeholder(tf.float32, [None, 2, n_out])
 
-    a0 = ReLU(Reshape([-1, h * w], Scale(64, Offset(128))))
+    a0 = ReLU(Reshape([-1, h * w], FeatureScale(data)))
     m1 = Weights(np.random.normal(np.full((h * w, n_hidden), 1.0 / (h * w))), a0)
     a1 = ReLU(Bias(np.random.normal(np.full(n_hidden, 1.0)), m1))
     m2 = Weights(np.random.normal(np.full((n_hidden, 2 * n_out), 1.0 / n_hidden)), a1)

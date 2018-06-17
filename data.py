@@ -53,6 +53,14 @@ class Operation(object):
         return self.regularisation_candidates_
 
 
+class FeatureScale(Operation):
+    def __init__(self, data, operand=None, maximum=1):
+        data = np.float32(data)
+        self.average = tf.Variable(np.average(data, axis=0))
+        self.std = tf.Variable(1.0 / np.maximum(np.std(data, axis=0), 1.0 / maximum))
+        super(FeatureScale, self).__init__(lambda x: tf.multiply(tf.subtract(x, self.average), self.std), operand)
+
+
 class Offset(Operation):
     def __init__(self, offset, operand=None):
         super(Offset, self).__init__(lambda x: tf.add(x, -offset), operand)

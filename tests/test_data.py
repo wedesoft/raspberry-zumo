@@ -76,6 +76,26 @@ class TestMultiClassLabel:
         assert multi_class_label([0], 1).dtype != np.bool
 
 
+class TestFeatureScale:
+    def test_trivial(self):
+        assert_array_equal(FeatureScale([[0]])([0]), [0])
+
+    def test_remove_average(self):
+        assert_array_equal(FeatureScale([[2], [4]])([4]), [1])
+
+    def test_multiple_averages(self):
+        assert_array_equal(FeatureScale([[2, 4]])([2, 4]), [0, 0])
+
+    def test_scale_variance(self):
+        assert_array_equal(FeatureScale([[1], [5]])([5]), [1])
+
+    def test_limit_scaling(self):
+        assert_array_equal(FeatureScale([[1]], None, 100)([3]), [200])
+
+    def test_nest_operations(self):
+        assert_array_equal(FeatureScale([[1]], Offset(-2))([1]), [2])
+
+
 class TestOffset:
     def test_trivial(self):
         assert_array_equal(Offset(0)([2, 3, 5]), [2, 3, 5])
