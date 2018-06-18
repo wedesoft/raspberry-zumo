@@ -98,4 +98,4 @@ if __name__ == '__main__':
 #saver.restore(session, 'model')
 #prediction = tf.get_collection('prediction')[0]
 #camera = Camera()
-#session.run(prediction, feed_dict={'x:0': cv2.cvtColor(camera.capture(), cv2.COLOR_BGR2GRAY)[::10, ::10].reshape(1, 24, 32)})
+#session.run(prediction, feed_dict={'x:0': cv2.cvtColor(camera.capture(), cv2.COLOR_BGR2GRAY)[::10, ::10]})
