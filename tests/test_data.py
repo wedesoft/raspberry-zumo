@@ -76,6 +76,14 @@ class TestMultiClassLabel:
         assert multi_class_label([0], 1).dtype != np.bool
 
 
+class TestOperation:
+    def test_load_and_save(self):
+        bias = Bias([2, 3])
+        bias.save('/tmp/bias')
+        operation = Operation.restore('/tmp/bias')
+        assert_array_equal(operation([5, 7]), [7, 10])
+
+
 class TestFeatureScale:
     def test_trivial(self):
         assert_array_equal(FeatureScale([[0]])([0]), [0])

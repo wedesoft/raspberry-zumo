@@ -28,6 +28,8 @@ def count_files(pattern, multiplier=1000, exist=os.path.exists):
 
 
 class Operation(object):
+    session = tf.Session()
+
     def __init__(self, operation, operand=None):
         if operand:
             self.x = operand.x
@@ -42,9 +44,19 @@ class Operation(object):
         self.operation = operation(operand)
 
     def __call__(self, value):
-        with tf.Session() as session:
-            session.run(tf.global_variables_initializer())
-            return session.run(self.operation, feed_dict={self.x: value})
+        return self.session.run(self.operation, feed_dict={self.x: value})
+
+    def save(self, file_name):
+        saver = tf.train.Saver()
+        tf.add_to_collection('prediction', self.operation)
+        saver.save(self.session, file_name)
+
+    @classmethod
+    def restore(cls, file_name):
+        saver = tf.train.import_meta_graph(file_name + '.meta')
+        saver.restore(cls.session, file_name)
+        prediction = tf.get_collection('prediction')[0]
+        return LoadedModel(prediction)
 
     def variables(self):
         return self.variables_
@@ -53,11 +65,18 @@ class Operation(object):
         return self.regularisation_candidates_
 
 
+class LoadedModel(Operation):
+    def __init__(self, prediction):
+        self.x = 'x:0'
+        self.operation = prediction
+
+
 class FeatureScale(Operation):
     def __init__(self, data, operand=None, maximum=1):
         data = np.float32(data)
         self.average = tf.Variable(np.average(data, axis=0))
         self.std = tf.Variable(1.0 / np.maximum(np.std(data, axis=0), 1.0 / maximum))
+        self.session.run(tf.global_variables_initializer())
         super(FeatureScale, self).__init__(lambda x: tf.multiply(tf.subtract(x, self.average), self.std), operand)
 
 
@@ -89,6 +108,7 @@ class ReLU(Operation):
 class Weights(Operation):
     def __init__(self, weights, operand=None):
         self.weights = tf.Variable(np.float32(weights))
+        self.session.run(tf.global_variables_initializer())
         super(Weights, self).__init__(lambda x: tf.matmul(x, self.weights), operand)
 
     def __call__(self, value):
@@ -108,6 +128,7 @@ class Weights(Operation):
 class Bias(Operation):
     def __init__(self, bias, operand=None):
         self.bias = tf.Variable(np.float32(bias))
+        self.session.run(tf.global_variables_initializer())
         super(Bias, self).__init__(lambda x: tf.add(x, self.bias), operand)
 
     def variables(self):
