@@ -25,9 +25,9 @@ if __name__ == '__main__':
     n_div = 5
     n_out = n_div * 2 + 1
     regularize = 0.128
-    sigma = 2
+    sigma = 1
     alpha = 0.1
-    n_hidden = 40 # training error: 24
+    n_hidden = 40 # training error: 19
     data = np.zeros((n, h, w))
     label = np.zeros((n, 2, n_out))
     drive = np.zeros((n, 2))
