@@ -15,32 +15,33 @@ from data import random_selection, count_files, FeatureScale, Reshape, ReLU, Sig
 
 
 if __name__ == '__main__':
-    iterations = 100000
+    iterations = 10000
     p = 10
     w, h = 320 // p, 240 // p
     n = count_files("images/image%04d.jpg")
     n_train = n * 6 // 10
     n_validation = n * 2 // 10
-    b = 20
+    batch_size = 20
     n_div = 5
     n_out = n_div * 2 + 1
-    regularize = 0.004 # validation error:
-    regularize = 0.016 # validation error: 
-    regularize = 0.008 # validation error:
-    alpha = 0.5
-    n_hidden = 20
+    regularize = 0.128
+    sigma = 2
+    alpha = 0.1
+    n_hidden = 40 # training error: 24
     data = np.zeros((n, h, w))
     label = np.zeros((n, 2, n_out))
+    drive = np.zeros((n, 2))
+    r = np.float32(np.arange(-n_div, n_div + 1) * 100.0 / n_div)
     for i in range(n):
         data[i] = cv2.imread("images/image%04d.jpg" % i, cv2.IMREAD_GRAYSCALE)[::p, ::p]
-        left_drive, right_drive = yaml.load(open("images/image%04d.yml" % i))
-        label[i, 0, int(round(left_drive  / 100.0 * n_div + n_div))] = 1
-        label[i, 1, int(round(right_drive / 100.0 * n_div + n_div))] = 1
+        drive[i] = yaml.load(open("images/image%04d.yml" % i))
+        label[i, 0] = np.exp(-((drive[i, 0] - r) / 100.0 * n_div / sigma) ** 2)
+        label[i, 1] = np.exp(-((drive[i, 1] - r) / 100.0 * n_div / sigma) ** 2)
     np.random.seed(0)
-    data, label = random_selection(n, data, label)
-    training = data[:n_train], label[:n_train]
-    validation = data[n_train:n_train+n_validation], label[n_train:n_train+n_validation]
-    testing = data[n_train+n_validation:], label[n_train+n_validation:]
+    data, label, drive = random_selection(n, data, label, drive)
+    training = data[:n_train], label[:n_train], drive[:n_train]
+    validation = data[n_train:n_train+n_validation], label[n_train:n_train+n_validation], drive[n_train:n_train+n_validation]
+    testing = data[n_train+n_validation:], label[n_train+n_validation:], drive[n_train+n_validation:]
     y = tf.placeholder(tf.float32, [None, 2, n_out])
 
     a0 = ReLU(Reshape([-1, h * w], FeatureScale(data)))
@@ -49,8 +50,7 @@ if __name__ == '__main__':
     m2 = Weights(np.random.normal(np.full((n_hidden, 2 * n_out), 1.0 / n_hidden)), a1)
     a2 = Reshape([-1, 2, n_out], Sigmoid(Bias(np.random.normal(np.full(2 * n_out, 1.0)), m2)))
     x, h = a2.x, a2.operation
-    prediction = tf.argmax(h, axis=-1)
-    #prediction = (tf.cast(tf.argmax(h, axis=-1), tf.float32) - n_div) * 100 / n_div
+    prediction = tf.reduce_sum(r * h, axis=-1) / tf.reduce_sum(h, axis=-1)
 
     theta = a2.variables()
     reg_candidates = a2.regularisation_candidates()
@@ -74,20 +74,22 @@ if __name__ == '__main__':
     c = 0
     progress = tqdm(range(iterations))
     for i in progress:
-        selection = random_selection(b, train[x], train[y])
+        selection = random_selection(batch_size, train[x], train[y])
         batch = {x: selection[0], y: selection[1]}
-        c = c * 0.999 + 0.001 * session.run(cost, feed_dict=batch)
+        c = c * (1 - 100.0 / iterations) + 100.0 / iterations * session.run(cost, feed_dict=batch)
         progress.set_description('cost: %8.6f' % c)
         session.run(step, feed_dict=batch)
 
-    print('training error:', np.sqrt(np.average((session.run(prediction, feed_dict=train) - session.run(tf.argmax(y, axis=-1), feed_dict = train)) ** 2)))
-    print('validation error:', np.sqrt(np.average((session.run(prediction, feed_dict=validate) - session.run(tf.argmax(y, axis=-1), feed_dict = validate)) ** 2)))
-    print('test error:', np.sqrt(np.average((session.run(prediction, feed_dict=test) - session.run(tf.argmax(y, axis=-1), feed_dict = test)) ** 2)))
+    print(session.run(prediction, feed_dict=train))
+    print('training error:', np.sqrt(np.average((session.run(prediction, feed_dict=train) - training[2]) ** 2)))
+    print('validation error:', np.sqrt(np.average((session.run(prediction, feed_dict=validate) - validation[2]) ** 2)))
+    print('test error:', np.sqrt(np.average((session.run(prediction, feed_dict=test) - testing[2]) ** 2)))
     tf.add_to_collection('prediction', prediction)
     saver.save(session, './model')
 
 
 #import cv2
+#import tensorflow as tf
 #from camera import Camera
 #session = tf.InteractiveSession()
 #saver = tf.train.import_meta_graph('model.meta')
