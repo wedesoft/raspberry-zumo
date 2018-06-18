@@ -11,18 +11,19 @@ class Robot:
         self.gpio = GPIO()
         self.camera = Camera()
         self.logger = Logger()
-        self.drives = None
+        self.drives = [0, 0]
 
     def update(self):
         message = self.udp_server.read()
         if message:
-            self.drives = tuple(float(number) for number in message.split(','))
+            left_drive, right_drive, button = message.split(',')
+            self.drives = (float(left_drive), float(right_drive))
             self.gpio.update(max( self.drives[0], 0),
                              max(-self.drives[0], 0),
                              max( self.drives[1], 0),
                              max(-self.drives[1], 0))
-        if self.drives:
-            image = self.camera.capture()
+        image = self.camera.capture()
+        if self.drives[0] or self.drives[1]:
             self.logger.log(image, *self.drives)
         return message
 

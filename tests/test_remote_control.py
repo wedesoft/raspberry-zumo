@@ -72,7 +72,14 @@ class TestRemoteControlUpdate:
         target.update()
         assert adapt.call_args_list == [call(0), call(0)]
 
-    def test_sends_converted_values(self, target, adapt, udp_client):
+    def test_sends_converted_values(self, target, adapt, udp_client, joystick):
         adapt.side_effect = [12.5, 22.5]
+        joystick.return_value.button = {}
         target.update()
-        udp_client.return_value.write.assert_called_with("12.50,22.50")
+        udp_client.return_value.write.assert_called_with("12.50,22.50,0")
+
+    def test_sends_first_button_pressed(self, target, adapt, udp_client, joystick):
+        adapt.side_effect = [12.5, 22.5]
+        joystick.return_value.button = {0: True}
+        target.update()
+        udp_client.return_value.write.assert_called_with("12.50,22.50,1")

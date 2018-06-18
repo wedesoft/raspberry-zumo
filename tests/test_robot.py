@@ -7,7 +7,7 @@ from robot import *
 @pytest.fixture(autouse=True)
 def udp_server(monkeypatch):
     monkeypatch.setattr(robot, 'UDPServer', MagicMock(name='udp_server'))
-    robot.UDPServer.return_value.read.return_value = "25.0,65.0"
+    robot.UDPServer.return_value.read.return_value = "25.0,65.0,0"
     return robot.UDPServer
 
 
@@ -63,7 +63,7 @@ class TestRobotUpdate:
         gpio.return_value.update.assert_called_with(25.0, 0.0, 65.0, 0.0)
 
     def test_update_drives_when_reversing(self, target, gpio, udp_server):
-        udp_server.return_value.read.return_value = "-25.0,-65.0"
+        udp_server.return_value.read.return_value = "-25.0,-65.0,0"
         target.update()
         gpio.return_value.update.assert_called_with(0.0, 25.0, 0.0, 65.0)
 
@@ -97,3 +97,8 @@ class TestRobotUpdate:
         udp_server.return_value.read.return_value = None
         target.update()
         assert logger.return_value.log.call_args_list == [call(image, 25.0, 65.0), call(image, 25.0, 65.0)]
+
+    def test_no_recording_if_drives_are_zero(self, target, udp_server, logger):
+        udp_server.return_value.read.return_value = "0,0,0"
+        target.update()
+        assert not logger.return_value.log.called

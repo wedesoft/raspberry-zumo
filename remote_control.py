@@ -24,7 +24,8 @@ class RemoteControl:
         self.joystick.update()
         left_drive  = self.adapt(self.joystick.axis.get(1, 0))
         right_drive = self.adapt(self.joystick.axis.get(4, 0))
-        self.udp_client.write("%.2f,%.2f" % (left_drive, right_drive))
+        button = self.joystick.button.get(0, False)
+        self.udp_client.write("%.2f,%.2f,%d" % (left_drive, right_drive, button))
 
 
 if __name__ == "__main__":
