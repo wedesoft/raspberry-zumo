@@ -12,6 +12,7 @@ import tensorflow as tf
 import numpy as np
 from tqdm import tqdm
 from data import random_selection, count_files, FeatureScale, Reshape, ReLU, Sigmoid, Weights, Bias
+from IPython import embed
 
 
 if __name__ == '__main__':
@@ -86,6 +87,7 @@ if __name__ == '__main__':
     print('test error:', np.sqrt(np.average((session.run(prediction, feed_dict=test) - testing[2]) ** 2)))
     tf.add_to_collection('prediction', prediction)
     saver.save(session, './model')
+    embed()
 
 
 #import cv2
