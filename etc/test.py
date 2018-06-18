@@ -25,10 +25,11 @@ if __name__ == '__main__':
     batch_size = 20
     n_div = 5
     n_out = n_div * 2 + 1
-    regularize = 0.128
+    regularize = 0.256
     sigma = 1
     alpha = 0.1
-    n_hidden = 40 # training error: 19
+    n_hidden = 40
+    # training error: 21.67, validation error: 26.11
     data = np.zeros((n, h, w))
     label = np.zeros((n, 2, n_out))
     drive = np.zeros((n, 2))
@@ -81,7 +82,6 @@ if __name__ == '__main__':
         progress.set_description('cost: %8.6f' % c)
         session.run(step, feed_dict=batch)
 
-    print(session.run(prediction, feed_dict=train))
     print('training error:', np.sqrt(np.average((session.run(prediction, feed_dict=train) - training[2]) ** 2)))
     print('validation error:', np.sqrt(np.average((session.run(prediction, feed_dict=validate) - validation[2]) ** 2)))
     print('test error:', np.sqrt(np.average((session.run(prediction, feed_dict=test) - testing[2]) ** 2)))
