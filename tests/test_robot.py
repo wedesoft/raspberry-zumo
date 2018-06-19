@@ -39,6 +39,27 @@ def target(udp_server, gpio, camera):
     return Robot()
 
 
+@pytest.fixture(autouse=True)
+def operation(monkeypatch):
+    monkeypatch.setattr(robot, 'Operation', MagicMock(name='Operation'))
+    robot.Operation.restore.return_value.return_value = [12.0, 16.0]
+    return robot.Operation
+
+
+@pytest.fixture(autouse=True)
+def to_gray(monkeypatch):
+    monkeypatch.setattr(robot, 'to_gray', MagicMock(name='to_gray'))
+    robot.to_gray.side_effect = lambda image: image.gray
+    return robot.to_gray
+
+
+@pytest.fixture(autouse=True)
+def down_sample(monkeypatch):
+    monkeypatch.setattr(robot, 'down_sample', MagicMock(name='down_sample'))
+    robot.down_sample.side_effect = lambda image: image.down_sample
+    return robot.down_sample
+
+
 class TestRobot:
     def test_start_udp_server(self, target, udp_server):
         assert udp_server.called
@@ -73,7 +94,7 @@ class TestRobotUpdate:
     def test_ignore_none(self, target, gpio, udp_server):
         udp_server.return_value.read.return_value = None
         target.update()
-        assert not gpio.return_value.update.called
+        gpio.return_value.update.assert_called_with(0.0, 0.0, 0.0, 0.0)
 
     def test_dont_return_true_if_no_message_received(self, target, udp_server):
         udp_server.return_value.read.return_value = None
@@ -102,3 +123,33 @@ class TestRobotUpdate:
         udp_server.return_value.read.return_value = "0,0,0"
         target.update()
         assert not logger.return_value.log.called
+
+    def test_auto_drive_loads_model(self, target, operation, udp_server):
+        udp_server.return_value.read.return_value = "0,0,1"
+        target.update()
+        operation.restore.assert_called_with('./model')
+
+    def test_only_load_model_in_auto_mode(self, target, operation):
+        target.update()
+        assert not operation.restore.called
+
+    def test_only_load_model_once(self, target, operation, udp_server):
+        udp_server.return_value.read.return_value = "0,0,1"
+        target.update()
+        target.update()
+        assert operation.restore.call_count == 1
+
+    def test_get_control_values(self, target, operation, udp_server, image):
+        udp_server.return_value.read.return_value = "0,0,1"
+        target.update()
+        operation.restore.return_value.assert_called_with(image.gray.down_sample)
+
+    def test_no_logging_in_auto_mode(self, target, udp_server, logger):
+        udp_server.return_value.read.return_value = "25.0,65.0,1"
+        target.update()
+        assert not logger.return_value.log.called
+
+    def test_use_auto_control_values(self, target, udp_server, gpio):
+        udp_server.return_value.read.return_value = "0,0,1"
+        target.update()
+        gpio.return_value.update.assert_called_with(12.0, 0.0, 16.0, 0.0)

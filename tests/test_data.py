@@ -59,6 +59,19 @@ class TestRandomSelection:
         assert_array_equal(random_selection(1, [[1, 2, 3]]), [[1, 2, 3]])
 
 
+class TestDownSample:
+    def test_shape(self):
+        assert down_sample(np.empty((240, 320)), 10).shape == (24, 32)
+
+
+class TestToGray:
+    def test_shape(self):
+        assert to_gray(np.empty((24, 32, 3))).shape == (24, 32)
+
+    def test_content(self):
+        assert_array_equal(to_gray([[[24, 32, 40]]]), [[33]])
+
+
 class TestMultiClassLabel:
     def test_one_class_label(self):
         assert_array_equal(multi_class_label([0], 1), [[1]])

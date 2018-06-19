@@ -3,6 +3,7 @@ from gpio import GPIO
 from udp_server import UDPServer
 from camera import Camera
 from logger import Logger
+from data import Operation, to_gray, down_sample
 
 
 class Robot:
@@ -12,19 +13,27 @@ class Robot:
         self.camera = Camera()
         self.logger = Logger()
         self.drives = [0, 0]
+        self.model = None
+        self.auto = False
 
     def update(self):
         message = self.udp_server.read()
-        if message:
-            left_drive, right_drive, button = message.split(',')
-            self.drives = (float(left_drive), float(right_drive))
-            self.gpio.update(max( self.drives[0], 0),
-                             max(-self.drives[0], 0),
-                             max( self.drives[1], 0),
-                             max(-self.drives[1], 0))
         image = self.camera.capture()
-        if self.drives[0] or self.drives[1]:
-            self.logger.log(image, *self.drives)
+        if message:
+            left_drive, right_drive, auto = message.split(',')
+            self.auto = auto != '0'
+            self.drives = (float(left_drive), float(right_drive))
+        if self.auto:
+            if not self.model:
+                self.model = Operation.restore('./model')
+            self.drives = self.model(down_sample(to_gray(image)))
+        else:
+            if self.drives[0] or self.drives[1]:
+                self.logger.log(image, *self.drives)
+        self.gpio.update(max( self.drives[0], 0),
+                         max(-self.drives[0], 0),
+                         max( self.drives[1], 0),
+                         max(-self.drives[1], 0))
         return message
 
 

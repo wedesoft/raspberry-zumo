@@ -1,4 +1,5 @@
 import os.path
+import cv2
 import numpy as np
 import tensorflow as tf
 
@@ -11,6 +12,14 @@ def random_selection(size, *arrays):
     indices = random_choice(len(arrays[0]), size)
     result = tuple(np.take(array, indices, axis=0) for array in arrays)
     return result[0] if len(result) == 1 else result
+
+
+def down_sample(value, amount):
+    return value[::amount, ::amount]
+
+
+def to_gray(value):
+    return cv2.cvtColor(np.uint8(value), cv2.COLOR_BGR2GRAY)
 
 
 def multi_class_label(labels, num_classes):
