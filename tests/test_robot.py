@@ -56,7 +56,7 @@ def to_gray(monkeypatch):
 @pytest.fixture(autouse=True)
 def down_sample(monkeypatch):
     monkeypatch.setattr(robot, 'down_sample', MagicMock(name='down_sample'))
-    robot.down_sample.side_effect = lambda image: image.down_sample
+    robot.down_sample.side_effect = lambda image, rate: image.down_sample
     return robot.down_sample
 
 
