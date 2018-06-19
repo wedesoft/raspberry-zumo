@@ -42,7 +42,7 @@ def target(udp_server, gpio, camera):
 @pytest.fixture(autouse=True)
 def operation(monkeypatch):
     monkeypatch.setattr(robot, 'Operation', MagicMock(name='Operation'))
-    robot.Operation.restore.return_value.return_value = [12.0, 16.0]
+    robot.Operation.restore.return_value.return_value = [[12.0, 16.0]]
     return robot.Operation
 
 

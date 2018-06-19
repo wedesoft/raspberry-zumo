@@ -26,7 +26,7 @@ class Robot:
         if self.auto:
             if not self.model:
                 self.model = Operation.restore('./model')
-            self.drives = self.model(down_sample(to_gray(image), 10))
+            self.drives = self.model(down_sample(to_gray(image), 10))[0]
         else:
             if self.drives[0] or self.drives[1]:
                 self.logger.log(image, *self.drives)
