@@ -48,9 +48,9 @@ if __name__ == '__main__':
 
     a0 = ReLU(Reshape([-1, h * w], FeatureScale(data)))
     m1 = Weights(np.random.normal(np.full((h * w, n_hidden), 1.0 / (h * w))), a0)
-    a1 = ReLU(Bias(np.random.normal(np.full(n_hidden, 1.0)), m1))
+    a1 = ReLU(Bias(np.zeros(n_hidden), m1))
     m2 = Weights(np.random.normal(np.full((n_hidden, 2 * n_out), 1.0 / n_hidden)), a1)
-    a2 = Reshape([-1, 2, n_out], Sigmoid(Bias(np.random.normal(np.full(2 * n_out, 1.0)), m2)))
+    a2 = Reshape([-1, 2, n_out], Sigmoid(Bias(np.zeros(2 * n_out), m2)))
     x, h = a2.x, a2.operation
     prediction = tf.reduce_sum(r * h, axis=-1) / tf.reduce_sum(h, axis=-1)
 
