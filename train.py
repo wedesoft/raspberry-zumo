@@ -11,14 +11,14 @@ import cv2
 import tensorflow as tf
 import numpy as np
 from tqdm import tqdm
-from data import random_selection, count_files, FeatureScale, Reshape, ReLU, Sigmoid, Weights, Bias
 from IPython import embed
+from data import random_selection, count_files, FeatureScale, Reshape, ReLU, Sigmoid, Weights, Bias, down_sample, to_gray
+import config
 
 
 if __name__ == '__main__':
     iterations = 10000
-    p = 10
-    w, h = 320 // p, 240 // p
+    w, h = 320 // config.sampling, 240 // config.sampling
     n = count_files("images/image%04d.jpg")
     n_train = n * 6 // 10
     n_validation = n * 2 // 10
@@ -35,7 +35,7 @@ if __name__ == '__main__':
     drive = np.zeros((n, 2))
     r = np.float32(np.arange(-n_div, n_div + 1) * 100.0 / n_div)
     for i in range(n):
-        data[i] = cv2.imread("images/image%04d.jpg" % i, cv2.IMREAD_GRAYSCALE)[::p, ::p]
+        data[i] = down_sample(to_gray(cv2.imread("images/image%04d.jpg" % i)), config.sampling)
         drive[i] = yaml.load(open("images/image%04d.yml" % i))
         label[i, 0] = np.exp(-((drive[i, 0] - r) / 100.0 * n_div / sigma) ** 2)
         label[i, 1] = np.exp(-((drive[i, 1] - r) / 100.0 * n_div / sigma) ** 2)
@@ -88,14 +88,3 @@ if __name__ == '__main__':
     tf.add_to_collection('prediction', prediction)
     saver.save(session, './model')
     embed()
-
-
-#import cv2
-#import tensorflow as tf
-#from camera import Camera
-#session = tf.InteractiveSession()
-#saver = tf.train.import_meta_graph('model.meta')
-#saver.restore(session, 'model')
-#prediction = tf.get_collection('prediction')[0]
-#camera = Camera()
-#session.run(prediction, feed_dict={'x:0': cv2.cvtColor(camera.capture(), cv2.COLOR_BGR2GRAY)[::10, ::10]})

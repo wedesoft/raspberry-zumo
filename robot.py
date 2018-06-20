@@ -4,6 +4,7 @@ from udp_server import UDPServer
 from camera import Camera
 from logger import Logger
 from data import Operation, to_gray, down_sample
+import config
 
 
 class Robot:
@@ -26,7 +27,7 @@ class Robot:
         if self.auto:
             if not self.model:
                 self.model = Operation.restore('./model')
-            self.drives = self.model(down_sample(to_gray(image), 10))[0]
+            self.drives = self.model(down_sample(to_gray(image), config.sampling))[0]
         else:
             if self.drives[0] or self.drives[1]:
                 self.logger.log(image, *self.drives)
