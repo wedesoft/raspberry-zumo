@@ -17,7 +17,7 @@ import config
 
 
 if __name__ == '__main__':
-    iterations = 10000
+    iterations = 25000
     w, h = 320 // config.sampling, 240 // config.sampling
     n = count_files("images/image%04d.jpg")
     n_train = n * 6 // 10
