@@ -16,6 +16,7 @@ class Robot:
         self.drives = [0, 0]
         self.model = None
         self.auto = False
+        print('Started')
 
     def update(self):
         message = self.udp_server.read()
@@ -27,6 +28,7 @@ class Robot:
         if self.auto:
             if not self.model:
                 self.model = Operation.restore('./model')
+                print('Model loaded')
             self.drives = self.model(down_sample(to_gray(image), config.sampling))[0]
         else:
             if self.drives[0] or self.drives[1]:
