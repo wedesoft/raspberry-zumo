@@ -34,12 +34,8 @@ sudo cp etc/ffserver.conf /etc
 ```
 
 ## Run
-### On the Raspberry Pi
-
-Run the control software.
-```
-./robot.py
-```
+### Video streaming
+#### On the Raspberry Pi
 
 Run the FFmpeg server.
 ```
@@ -52,16 +48,47 @@ sudo modprobe bcm2835-v4l2
 ./webcam.sh
 ```
 
-### On the PC
+#### On the PC
+
+Run the camera display.
+```
+./play.sh
+```
+
+### Remote control
+#### On the Raspberry Pi
+
+Run the control software.
+```
+./robot.py
+```
+
+#### On the PC
 
 Run the XBox client.
 ```
 ./remote_control.py
 ```
 
-Run the camera display.
+The two XBox joysticks can be used to control the robot.
+By pressing and holding the "A" button, the robot goes into autonomous mode.
+Note that it takes some time for the software to start and the neural network to load.
+
+### Training
+
+Copy the images and YAML files to the PC into the *images* directory.
 ```
-./play.sh
+rsync -az pi@raspberrypi:raspberry-zumo/images .
+```
+
+Run the training.
+```
+./train.py
+```
+
+Copy the new neural network to the robot.
+```
+scp model.* pi@raspberrypi:raspberry-zumo
 ```
 
 ## External Links
