@@ -84,3 +84,5 @@ Run the camera display.
 * [Raspberry Pi PWM GPIO in Python](https://sourceforge.net/p/raspberry-gpio-python/wiki/PWM/)
 * [UDP communication in Python](https://wiki.python.org/moin/UdpCommunication)
 * [PiCamera API](http://picamera.readthedocs.io/en/release-1.10/api_camera.html)
+* [Monsterborg](http://www.piborg.org/robots/monsterborg)
+* [Donkeycar](http://www.donkeycar.com/)
