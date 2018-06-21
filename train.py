@@ -25,11 +25,11 @@ if __name__ == '__main__':
     batch_size = 20
     n_div = 5
     n_out = n_div * 2 + 1
-    regularize = 0.128
+    regularize = 0.032
     sigma = 1
     alpha = 0.1
-    n_hidden = 40
-    # training error: 21.67, validation error: 26.11
+    n_hidden1 = 20
+    n_hidden2 = 20
     data = np.zeros((n, h, w))
     label = np.zeros((n, 2, n_out))
     drive = np.zeros((n, 2))
@@ -47,15 +47,17 @@ if __name__ == '__main__':
     y = tf.placeholder(tf.float32, [None, 2, n_out])
 
     a0 = ReLU(Reshape([-1, h * w], FeatureScale(data)))
-    m1 = Weights(np.random.normal(np.full((h * w, n_hidden), 1.0 / (h * w))), a0)
-    a1 = ReLU(Bias(np.zeros(n_hidden), m1))
-    m2 = Weights(np.random.normal(np.full((n_hidden, 2 * n_out), 1.0 / n_hidden)), a1)
-    a2 = Reshape([-1, 2, n_out], Sigmoid(Bias(np.zeros(2 * n_out), m2)))
-    x, h = a2.x, a2.operation
+    m1 = Weights(np.random.normal(np.full((h * w, n_hidden1), 1.0 / (h * w))), a0)
+    a1 = ReLU(Bias(np.zeros(n_hidden1), m1))
+    m2 = Weights(np.random.normal(np.full((n_hidden1, n_hidden2), 1.0 / (h * w))), a1)
+    a2 = ReLU(Bias(np.zeros(n_hidden2), m2))
+    m3 = Weights(np.random.normal(np.full((n_hidden2, 2 * n_out), 1.0 / n_hidden2)), a2)
+    a3 = Reshape([-1, 2, n_out], Sigmoid(Bias(np.zeros(2 * n_out), m3)))
+    x, h = a3.x, a3.operation
     prediction = tf.reduce_sum(r * h, axis=-1) / tf.reduce_sum(h, axis=-1)
 
-    theta = a2.variables()
-    reg_candidates = a2.regularisation_candidates()
+    theta = a3.variables()
+    reg_candidates = a3.regularisation_candidates()
 
     m = tf.cast(tf.size(y) / n_out, tf.float32)
     reg_term = reduce(add, [tf.reduce_sum(tf.square(parameter)) for parameter in reg_candidates]) / (m * 2)
