@@ -27,7 +27,7 @@ def multi_class_label(labels, num_classes):
     return np.where(np.equal(index % num_classes, np.expand_dims(labels, -1)), 1, 0)
 
 
-def count_files(pattern, multiplier=1000, exist=os.path.exists):
+def count_files(pattern, multiplier=100000, exist=os.path.exists):
     count = -1
     while multiplier > 0:
         while exist(pattern % (count + multiplier)):

@@ -17,9 +17,9 @@ import config
 
 
 if __name__ == '__main__':
-    iterations = 25000
+    iterations = 50000
     w, h = 320 // config.sampling, 240 // config.sampling
-    n = count_files("images/image%04d.jpg")
+    n = count_files("images/image%06d.jpg")
     n_train = n * 6 // 10
     n_validation = n * 2 // 10
     batch_size = 20
@@ -35,8 +35,8 @@ if __name__ == '__main__':
     drive = np.zeros((n, 2))
     r = np.float32(np.arange(-n_div, n_div + 1) * 100.0 / n_div)
     for i in range(n):
-        data[i] = down_sample(to_gray(cv2.imread("images/image%04d.jpg" % i)), config.sampling)
-        drive[i] = yaml.load(open("images/image%04d.yml" % i))
+        data[i] = down_sample(to_gray(cv2.imread("images/image%06d.jpg" % i)), config.sampling)
+        drive[i] = yaml.load(open("images/image%06d.yml" % i))
         label[i, 0] = np.exp(-((drive[i, 0] - r) / 100.0 * n_div / sigma) ** 2)
         label[i, 1] = np.exp(-((drive[i, 1] - r) / 100.0 * n_div / sigma) ** 2)
     np.random.seed(0)
