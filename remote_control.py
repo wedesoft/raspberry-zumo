@@ -10,6 +10,7 @@ class RemoteControl:
     def __init__(self):
         self.udp_client = UDPClient()
         self.joystick = Joystick()
+        self.auto = False
 
     @classmethod
     def adapt(cls, value):
@@ -24,8 +25,8 @@ class RemoteControl:
         self.joystick.update()
         left_drive  = self.adapt(self.joystick.axis.get(1, 0))
         right_drive = self.adapt(self.joystick.axis.get(4, 0))
-        button = self.joystick.button.get(0, False)
-        self.udp_client.write("%.2f,%.2f,%d" % (left_drive, right_drive, button))
+        self.auto = (self.auto or self.joystick.button.get(0, False)) and not self.joystick.button.get(1, False)
+        self.udp_client.write("%.2f,%.2f,%d" % (left_drive, right_drive, self.auto))
 
 
 if __name__ == "__main__":

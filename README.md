@@ -71,7 +71,8 @@ Run the XBox client.
 ```
 
 The two XBox joysticks can be used to control the robot.
-By pressing and holding the "A" button, the robot goes into autonomous mode.
+When pressing the "A" button, the robot goes into autonomous mode.
+Autonomous mode can be exited by pressing the "B" button.
 Note that it takes some time for the software to start and the neural network to load.
 
 ### Training

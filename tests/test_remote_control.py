@@ -83,3 +83,19 @@ class TestRemoteControlUpdate:
         joystick.return_value.button = {0: True}
         target.update()
         udp_client.return_value.write.assert_called_with("12.50,22.50,1")
+
+    def test_keep_auto_on(self, target, adapt, udp_client, joystick):
+        adapt.side_effect = [2.5, 22.0, 12.5, 22.5]
+        joystick.return_value.button = {0: True}
+        target.update()
+        joystick.return_value.button = {0: False}
+        target.update()
+        udp_client.return_value.write.assert_called_with("12.50,22.50,1")
+
+    def test_turn_auto_off(self, target, adapt, udp_client, joystick):
+        adapt.side_effect = [2.5, 22.0, 12.5, 22.5]
+        joystick.return_value.button = {0: True}
+        target.update()
+        joystick.return_value.button = {0: False, 1: True}
+        target.update()
+        udp_client.return_value.write.assert_called_with("12.50,22.50,0")
