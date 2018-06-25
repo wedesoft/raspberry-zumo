@@ -25,7 +25,7 @@ if __name__ == '__main__':
     batch_size = 20
     n_div = 5
     n_out = n_div * 2 + 1
-    regularize = 0.032
+    regularize = 0.064
     sigma = 1
     alpha = 0.1
     n_hidden1 = 20
