@@ -47,11 +47,11 @@ if __name__ == '__main__':
     y = tf.placeholder(tf.float32, [None, 2, n_out])
 
     a0 = ReLU(Reshape([-1, h * w], FeatureScale(data)))
-    m1 = Weights(np.random.normal(np.full((h * w, n_hidden1), 1.0 / (h * w))), a0)
+    m1 = Weights(np.random.randn(h * w, n_hidden1) * np.sqrt(2.0 / (h * w)), a0)
     a1 = ReLU(Bias(np.zeros(n_hidden1), m1))
-    m2 = Weights(np.random.normal(np.full((n_hidden1, n_hidden2), 1.0 / (h * w))), a1)
+    m2 = Weights(np.random.randn(n_hidden1, n_hidden2) * np.sqrt(2.0 / n_hidden1), a1)
     a2 = ReLU(Bias(np.zeros(n_hidden2), m2))
-    m3 = Weights(np.random.normal(np.full((n_hidden2, 2 * n_out), 1.0 / n_hidden2)), a2)
+    m3 = Weights(np.random.randn(n_hidden2, 2 * n_out) * np.sqrt(1.0 / n_hidden2), a2)
     a3 = Reshape([-1, 2, n_out], Sigmoid(Bias(np.zeros(2 * n_out), m3)))
     x, h = a3.x, a3.operation
     prediction = tf.reduce_sum(r * h, axis=-1) / tf.reduce_sum(h, axis=-1)
