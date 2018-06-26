@@ -17,12 +17,12 @@ import config
 
 
 if __name__ == '__main__':
-    iterations = 50000
+    iterations = 5000
     w, h = 320 // config.sampling, 240 // config.sampling
     n = count_files("images/image%06d.jpg")
     n_train = n * 6 // 10
     n_validation = n * 2 // 10
-    batch_size = 20
+    batch_size = 256
     n_div = 5
     n_out = n_div * 2 + 1
     regularize = 0.064
