@@ -27,6 +27,7 @@ class Robot:
             self.drives = (float(left_drive), float(right_drive))
         if self.auto:
             if not self.model:
+                print('Loading model')
                 self.model = Operation.restore('./model')
                 print('Model loaded')
             self.drives = self.model(down_sample(to_gray(image), config.sampling))[0]
