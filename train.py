@@ -28,6 +28,7 @@ if __name__ == '__main__':
     regularize = 0.064
     sigma = 1
     alpha = 0.1
+    beta = 0.9
     n_hidden1 = 20
     n_hidden2 = 20
     data = np.zeros((n, h, w))
@@ -66,7 +67,10 @@ if __name__ == '__main__':
     cost = error_term + regularize * reg_term
     rmsd = tf.reduce_sum(tf.square(h - y)) / (2 * m)
     dtheta = tf.gradients(cost, theta)
-    step = [tf.assign(value, tf.subtract(value, tf.multiply(alpha, dvalue))) for value, dvalue in zip(theta, dtheta)]
+    dv = [tf.Variable(np.zeros(t.shape, dtype=np.float32)) for t in dtheta]
+    step1 = [tf.assign(value, tf.add(value * beta, (1 - beta) * grad)) for value, grad in zip(dv, dtheta)]
+    step2 = [tf.assign(value, tf.subtract(value, tf.multiply(alpha, dvalue))) for value, dvalue in zip(theta, dv)]
+    step = step1 + step2
 
     train = {x: training[0], y: training[1]}
     validate = {x: validation[0], y: validation[1]}
