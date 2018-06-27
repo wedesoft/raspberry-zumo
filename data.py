@@ -133,6 +133,9 @@ class Weights(Operation):
     def regularisation_candidates(self):
         return super(Weights, self).regularisation_candidates() + [self.weights]
 
+    def shape(self):
+        return self.weights.shape
+
 
 class Bias(Operation):
     def __init__(self, bias, operand=None):
@@ -142,3 +145,6 @@ class Bias(Operation):
 
     def variables(self):
         return super(Bias, self).variables() + [self.bias]
+
+    def shape(self):
+        return self.bias.shape

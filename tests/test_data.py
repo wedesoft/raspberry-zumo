@@ -202,6 +202,9 @@ class TestWeights:
         weights = Weights([[2, 3], [5, 7]], bias)
         assert weights.regularisation_candidates() == [weights.weights]
 
+    def test_shape(self):
+        assert Weights([[2, 3, 5], [3, 5, 7]]).shape() == [2, 3]
+
 
 class TestBias:
     def test_apply_offset(self):
@@ -229,3 +232,6 @@ class TestBias:
         weights = Weights([[2, 3], [5, 7]])
         bias = Bias([2, 3], weights)
         assert bias.regularisation_candidates() == [weights.weights]
+
+    def test_shape(self):
+        assert Bias([2, 3, 5]).shape() == [3]
