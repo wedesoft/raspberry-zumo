@@ -235,3 +235,14 @@ class TestBias:
 
     def test_shape(self):
         assert Bias([2, 3, 5]).shape() == [3]
+
+
+class TestRegularisation:
+    def test_regularise_weights(self):
+        assert Regularisation(Weights([[2, 3]]))() == 13
+
+    def test_ignore_bias(self):
+        assert Regularisation(Bias([5, 7], Weights([[2, 3]])))() == 13
+
+    def test_regularise_all_weights(self):
+        assert Regularisation(Weights([[2]], Weights([[3]])))() == 13

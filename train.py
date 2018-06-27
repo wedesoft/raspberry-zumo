@@ -12,7 +12,7 @@ import tensorflow as tf
 import numpy as np
 from tqdm import tqdm
 from IPython import embed
-from data import random_selection, count_files, FeatureScale, Reshape, ReLU, Sigmoid, Weights, Bias, down_sample, to_gray
+from data import random_selection, count_files, FeatureScale, Reshape, ReLU, Sigmoid, Weights, Bias, down_sample, to_gray, Regularisation
 import config
 
 
@@ -25,7 +25,7 @@ if __name__ == '__main__':
     batch_size = 256
     n_div = 5
     n_out = n_div * 2 + 1
-    regularize = 0.064
+    regularize = 0.128
     sigma = 1
     alpha = 0.1
     beta = 0.9
@@ -61,15 +61,15 @@ if __name__ == '__main__':
     reg_candidates = a3.regularisation_candidates()
 
     m = tf.cast(tf.size(y) / n_out, tf.float32)
-    reg_term = reduce(add, [tf.reduce_sum(tf.square(parameter)) for parameter in reg_candidates]) / (m * 2)
+    reg_term = Regularisation(a3).operation / (m * 2)
     safe_log = lambda v: tf.log(tf.clip_by_value(v, 1e-10, 1.0))
     error_term = -tf.reduce_sum(y * safe_log(h) + (1 - y) * safe_log(1 - h)) / m
     cost = error_term + regularize * reg_term
     rmsd = tf.reduce_sum(tf.square(h - y)) / (2 * m)
     dtheta = tf.gradients(cost, theta)
     dv = [tf.Variable(np.zeros(t.shape, dtype=np.float32)) for t in dtheta]
-    step1 = [tf.assign(value, tf.add(value * beta, (1 - beta) * grad)) for value, grad in zip(dv, dtheta)]
-    step2 = [tf.assign(value, tf.subtract(value, tf.multiply(alpha, dvalue))) for value, dvalue in zip(theta, dv)]
+    step1 = [tf.assign(value, value * beta + (1 - beta) * grad) for value, grad in zip(dv, dtheta)]
+    step2 = [tf.assign(value, value - alpha * dvalue) for value, dvalue in zip(theta, dv)]
     step = step1 + step2
 
     train = {x: training[0], y: training[1]}

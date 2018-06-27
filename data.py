@@ -2,6 +2,8 @@ import os.path
 import cv2
 import numpy as np
 import tensorflow as tf
+from functools import reduce
+from operator import add
 
 
 def random_choice(count, size):
@@ -148,3 +150,13 @@ class Bias(Operation):
 
     def shape(self):
         return self.bias.shape
+
+
+class Regularisation(Operation):
+    def __init__(self, model):
+        candidates = model.regularisation_candidates()
+        term = reduce(add, [tf.reduce_sum(tf.square(candidate)) for candidate in candidates])
+        super(Regularisation, self).__init__(lambda x: term, model)
+
+    def __call__(self):
+        return self.session.run(self.operation)
