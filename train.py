@@ -25,12 +25,13 @@ if __name__ == '__main__':
     batch_size = 256
     n_div = 5
     n_out = n_div * 2 + 1
-    regularize = 0.128
+    regularize = 0.016
     sigma = 1
     alpha = 0.1
     beta = 0.9
     n_hidden1 = 20
     n_hidden2 = 20
+    n_hidden3 = 20
     data = np.zeros((n, h, w))
     label = np.zeros((n, 2, n_out))
     drive = np.zeros((n, 2))
@@ -52,16 +53,18 @@ if __name__ == '__main__':
     a1 = ReLU(Bias(np.zeros(n_hidden1), m1))
     m2 = Weights(np.random.randn(n_hidden1, n_hidden2) * np.sqrt(2.0 / n_hidden1), a1)
     a2 = ReLU(Bias(np.zeros(n_hidden2), m2))
-    m3 = Weights(np.random.randn(n_hidden2, 2 * n_out) * np.sqrt(1.0 / n_hidden2), a2)
-    a3 = Reshape([-1, 2, n_out], Sigmoid(Bias(np.zeros(2 * n_out), m3)))
-    x, h = a3.x, a3.operation
+    m3 = Weights(np.random.randn(n_hidden2, n_hidden3) * np.sqrt(2.0 / n_hidden2), a2)
+    a3 = ReLU(Bias(np.zeros(n_hidden3), m3))
+    m4 = Weights(np.random.randn(n_hidden3, 2 * n_out) * np.sqrt(1.0 / n_hidden3), a3)
+    a4 = Reshape([-1, 2, n_out], Sigmoid(Bias(np.zeros(2 * n_out), m4)))
+    x, h = a4.x, a4.operation
     prediction = tf.reduce_sum(r * h, axis=-1) / tf.reduce_sum(h, axis=-1)
 
-    theta = a3.variables()
+    theta = a4.variables()
     m = tf.cast(tf.shape(x)[0], tf.float32)
     safe_log = lambda v: tf.log(tf.clip_by_value(v, 1e-10, 1.0))
     error_term = -tf.reduce_sum(y * safe_log(h) + (1 - y) * safe_log(1 - h)) / m
-    cost = error_term + regularize * Regularisation(a3).operation
+    cost = error_term + regularize * Regularisation(a4).operation
     rmsd = tf.reduce_sum(tf.square(h - y)) / (2 * m)
     dtheta = tf.gradients(cost, theta)
     dv = [tf.Variable(np.zeros(t.shape, dtype=np.float32)) for t in dtheta]
