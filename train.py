@@ -58,13 +58,10 @@ if __name__ == '__main__':
     prediction = tf.reduce_sum(r * h, axis=-1) / tf.reduce_sum(h, axis=-1)
 
     theta = a3.variables()
-    reg_candidates = a3.regularisation_candidates()
-
-    m = tf.cast(tf.size(y) / n_out, tf.float32)
-    reg_term = Regularisation(a3).operation / (m * 2)
+    m = tf.cast(tf.shape(x)[0], tf.float32)
     safe_log = lambda v: tf.log(tf.clip_by_value(v, 1e-10, 1.0))
     error_term = -tf.reduce_sum(y * safe_log(h) + (1 - y) * safe_log(1 - h)) / m
-    cost = error_term + regularize * reg_term
+    cost = error_term + regularize * Regularisation(a3).operation
     rmsd = tf.reduce_sum(tf.square(h - y)) / (2 * m)
     dtheta = tf.gradients(cost, theta)
     dv = [tf.Variable(np.zeros(t.shape, dtype=np.float32)) for t in dtheta]

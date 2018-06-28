@@ -239,10 +239,13 @@ class TestBias:
 
 class TestRegularisation:
     def test_regularise_weights(self):
-        assert Regularisation(Weights([[2, 3]]))() == 13
+        assert Regularisation(Weights([[2, 3]]))([[0]]) == 6.5
 
     def test_ignore_bias(self):
-        assert Regularisation(Bias([5, 7], Weights([[2, 3]])))() == 13
+        assert Regularisation(Bias([5, 7], Weights([[2, 3]])))([[0]]) == 6.5
 
     def test_regularise_all_weights(self):
-        assert Regularisation(Weights([[2]], Weights([[3]])))() == 13
+        assert Regularisation(Weights([[2]], Weights([[3]])))([[0]]) == 6.5
+
+    def test_divide_by_mini_batch_size(self):
+        assert Regularisation(Weights([[2]], Weights([[3]])))([[0], [0]]) == 3.25

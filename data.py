@@ -156,7 +156,4 @@ class Regularisation(Operation):
     def __init__(self, model):
         candidates = model.regularisation_candidates()
         term = reduce(add, [tf.reduce_sum(tf.square(candidate)) for candidate in candidates])
-        super(Regularisation, self).__init__(lambda x: term, model)
-
-    def __call__(self):
-        return self.session.run(self.operation)
+        super(Regularisation, self).__init__(lambda x: term / (2 * tf.cast(tf.shape(x)[0], tf.float32)), model)
