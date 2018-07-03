@@ -12,7 +12,7 @@ import tensorflow as tf
 import numpy as np
 from tqdm import tqdm
 from IPython import embed
-from data import random_selection, count_files, FeatureScale, Reshape, ReLU, Sigmoid, Weights, Bias, down_sample, to_gray, Regularisation
+from data import random_selection, count_files, FeatureScale, Reshape, ReLU, Sigmoid, Weights, Bias, down_sample, to_gray, Regularisation, Softmax
 import config
 
 
@@ -55,7 +55,7 @@ if __name__ == '__main__':
     m3 = Weights(np.random.randn(n_hidden2, n_hidden3) * np.sqrt(2.0 / n_hidden2), a2)
     a3 = ReLU(Bias(np.zeros(n_hidden3), m3))
     m4 = Weights(np.random.randn(n_hidden3, 2 * n_out) * np.sqrt(1.0 / n_hidden3), a3)
-    a4 = Reshape([-1, 2, n_out], Sigmoid(Bias(np.zeros(2 * n_out), m4)))
+    a4 = Sigmoid(Reshape([-1, 2, n_out], Bias(np.zeros(2 * n_out), m4)))
     x, h = a4.x, a4.operation
     prediction = tf.reduce_sum(r * h, axis=-1) / tf.reduce_sum(h, axis=-1)
 

@@ -152,6 +152,11 @@ class Bias(Operation):
         return self.bias.shape
 
 
+class Softmax(Operation):
+    def __init__(self, operand=None):
+        super(Softmax, self).__init__(lambda x: tf.nn.softmax(x), operand)
+
+
 class Regularisation(Operation):
     def __init__(self, model):
         candidates = model.regularisation_candidates()

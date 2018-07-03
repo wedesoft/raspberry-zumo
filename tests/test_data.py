@@ -237,6 +237,18 @@ class TestBias:
         assert Bias([2, 3, 5]).shape() == [3]
 
 
+class TestSoftmax:
+    def test_normalise(self):
+        assert_array_almost_equal(Softmax()([2, 3, 5]), [0.042, 0.114, 0.844], decimal=3)
+
+    def test_only_last_dimension(self):
+        assert_array_almost_equal(Softmax()([[1, 1, 1], [2, 3, 5]]),
+                                            [[0.333, 0.333, 0.333], [0.042, 0.114, 0.844]], decimal=3)
+
+    def test_nesting(self):
+        assert_array_almost_equal(Softmax(Bias([4, 3, 1]))([2, 3, 5]), [0.333, 0.333, 0.333], decimal=3)
+
+
 class TestRegularisation:
     def test_regularise_weights(self):
         assert Regularisation(Weights([[2, 3]]))([[0]]) == 6.5
