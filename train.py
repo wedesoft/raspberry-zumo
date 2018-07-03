@@ -17,7 +17,7 @@ import config
 
 
 if __name__ == '__main__':
-    iterations = 5000
+    iterations = 10000
     w, h = 320 // config.sampling, 240 // config.sampling
     n = count_files("images/image%06d.jpg")
     n_train = n * 6 // 10
@@ -28,7 +28,6 @@ if __name__ == '__main__':
     regularize = 0.016
     sigma = 1
     alpha = 0.1
-    beta = 0.9
     n_hidden1 = 20
     n_hidden2 = 20
     n_hidden3 = 20
@@ -65,12 +64,9 @@ if __name__ == '__main__':
     safe_log = lambda v: tf.log(tf.clip_by_value(v, 1e-10, 1.0))
     error_term = -tf.reduce_sum(y * safe_log(h) + (1 - y) * safe_log(1 - h)) / m
     cost = error_term + regularize * Regularisation(a4).operation
-    rmsd = tf.reduce_sum(tf.square(h - y)) / (2 * m)
-    dtheta = tf.gradients(cost, theta)
-    dv = [tf.Variable(np.zeros(t.shape, dtype=np.float32)) for t in dtheta]
-    step1 = [tf.assign(value, value * beta + (1 - beta) * grad) for value, grad in zip(dv, dtheta)]
-    step2 = [tf.assign(value, value - alpha * dvalue) for value, dvalue in zip(theta, dv)]
-    step = step1 + step2
+
+    optimizer = tf.train.GradientDescentOptimizer(alpha)
+    step = optimizer.minimize(cost)
 
     train = {x: training[0], y: training[1]}
     validate = {x: validation[0], y: validation[1]}
