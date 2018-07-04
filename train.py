@@ -27,7 +27,7 @@ if __name__ == '__main__':
     n_out = n_div * 2 + 1
     regularize = 0.016
     sigma = 1
-    alpha = 0.05
+    alpha = 0.025
     n_hidden1 = 20
     n_hidden2 = 20
     n_hidden3 = 20
