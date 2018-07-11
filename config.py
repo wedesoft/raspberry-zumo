@@ -1,1 +1,1 @@
-sampling = 5
+sampling = 10
