@@ -10,7 +10,7 @@ before_install:
   - sudo apt-get install --allow-unauthenticated python python-dev python-pytest python-pip python-mock python-yaml python-opencv
   - sudo apt-get install --allow-unauthenticated libsdl2-dev libsdl2-gfx-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-net-dev libsdl2-ttf-dev
   - sudo pip install -q --ignore-installed tensorflow==1.9.0
-  - sudo pip install -q PySDL2
-  - sudo pip install -q RPi.GPIO
+  - sudo pip install -q PySDL2==0.9.6
+  - sudo pip install -q RPi.GPIO==0.6.3
 script:
   - py.test
