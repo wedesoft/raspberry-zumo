@@ -9,7 +9,7 @@ class UDPClient:
         self.port = port
 
     def write(self, text):
-        self.socket.sendto(text, (self.host, self.port))
+        self.socket.sendto(bytearray(text, 'utf8'), (self.host, self.port))
 
 
 if __name__ == "__main__":
